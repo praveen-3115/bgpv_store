@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sassy store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <h2>Verify OTP</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color:red;">{{ message }}</p>
+    {% endfor %}
+    {% endwith %}
+    <p>User Registration</p>
+    <form method="POST" action="/verify-user-otp">
+
+        <label>Enter OTP:</label><br>
+        <input type="text" name="otp" required><br><br>
+
+        <label>Create Password:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <button type="submit">Verify & Register</button>
+    </form>
+
+</body>
+
+</html>

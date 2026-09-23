@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <h2>User Registration</h2>
+
+    <!--Flash Messages-->
+    {% with messages=get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color: red;">{{message}}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <form action="" method="post">
+        <label for="">Name:</label>
+        <input type="text" name="name" id="">
+        <br>
+        <label for="">Email: </label>
+        <input type="email" name="email" id="">
+        <br>
+        <button type="submit">Send OTP</button>
+    </form>
+</body>
+
+</html>

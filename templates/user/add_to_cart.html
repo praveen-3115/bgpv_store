@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* ================================
+           CART PAGE
+        ================================= */
+
+        .cart-page {
+            width: 100%;
+            padding: 30px;
+        }
+
+        .cart-page form {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
+
+        .cart-title {
+            font-size: 30px;
+            margin-bottom: 25px;
+            color: #111827;
+        }
+
+
+        .cart-table-wrapper {
+            width: 100%;
+        }
+
+        .cart-table {
+            width: 1000px;
+            max-width: none;
+            border-collapse: collapse;
+            table-layout: auto;
+        }
+
+        .cart-table th {
+            background: #111827;
+            color: white;
+            padding: 15px 12px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .cart-table td {
+            padding: 15px 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: middle;
+        }
+
+        .cart-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cart-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        /* Product image */
+
+        .cart-product-image {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin: auto;
+            background: #f8fafc;
+            padding: 5px;
+        }
+
+        /* Product name */
+
+        .cart-product-name {
+            font-weight: 600;
+            color: #1f2937;
+            max-width: 180px;
+        }
+
+        /* Checkbox */
+
+        .cart-checkbox {
+            width: 18px !important;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #2563eb;
+        }
+
+        /* Quantity */
+
+        .cart-quantity {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            border-radius: 6px;
+            background: #e5e7eb !important;
+            color: #111827 !important;
+            font-size: 20px !important;
+            font-weight: 600;
+            text-decoration: none !important;
+        }
+
+        .quantity-btn:hover {
+            background: #2563eb !important;
+            color: white !important;
+        }
+
+        .quantity-number {
+            min-width: 25px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        /* Remove */
+
+        .remove-btn {
+            color: #dc2626 !important;
+            background: #fee2e2;
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .remove-btn:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+        /* Price */
+
+        .cart-price {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .cart-total {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        /* Bottom section */
+
+        .cart-bottom {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cart-btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .calculate-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .calculate-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .pay-btn {
+            background: #16a34a;
+            color: white;
+        }
+
+        .pay-btn:hover {
+            background: #15803d;
+        }
+
+        /* Grand total */
+
+        .grand-total-box {
+            background: white;
+            padding: 15px 22px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e5e7eb;
+        }
+
+        .grand-total-box h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .grand-total-amount {
+            color: #16a34a;
+        }
+
+
+        /* ================================
+           TABLET
+        ================================= */
+
+        @media (max-width: 768px) {
+
+            .cart-page {
+                width: 95%;
+                margin: 25px auto;
+            }
+
+            .cart-title {
+                font-size: 26px;
+            }
+
+            .cart-bottom {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .cart-actions {
+                width: 100%;
+            }
+
+            .cart-btn {
+                flex: 1;
+            }
+
+            .grand-total-box {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 500px) {
+
+            .cart-page {
+                width: 94%;
+                margin: 20px auto;
+            }
+
+            .cart-title {
+                font-size: 23px;
+                margin-bottom: 18px;
+            }
+
+            @media (max-width: 500px) {
+
+                .cart-page {
+                    width: 96%;
+                    margin: 20px auto;
+                }
+
+                .cart-title {
+                    font-size: 23px;
+                }
+
+                .cart-table {
+                    width: 100%;
+                    table-layout: fixed;
+                }
+
+                .cart-table th,
+                .cart-table td {
+                    padding: 7px 3px;
+                    font-size: 11px;
+                    word-break: break-word;
+                }
+
+                .cart-product-image {
+                    width: 45px;
+                    height: 45px;
+                }
+
+                .cart-product-name {
+                    font-size: 11px;
+                    max-width: 70px;
+                }
+
+                .cart-quantity {
+                    gap: 2px;
+                }
+
+                .quantity-btn {
+                    width: 22px;
+                    height: 22px;
+                    font-size: 14px !important;
+                }
+
+                .quantity-number {
+                    min-width: 15px;
+                    font-size: 11px;
+                }
+
+                .remove-btn {
+                    padding: 4px 5px;
+                    font-size: 10px;
+                }
+
+                .cart-bottom {
+                    width: 100%;
+                }
+
+                .cart-actions {
+                    width: 100%;
+                    flex-direction: column;
+                }
+
+                .cart-btn {
+                    width: 100%;
+                }
+
+                .grand-total-box {
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+
+            .quantity-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 17px !important;
+            }
+
+            .cart-quantity {
+                gap: 6px;
+            }
+
+            .remove-btn {
+                padding: 6px 9px;
+                font-size: 12px;
+            }
+
+            .cart-actions {
+                flex-direction: column;
+            }
+
+            .cart-btn {
+                width: 100%;
+            }
+
+            .grand-total-box h3 {
+                font-size: 18px;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <main class="cart-page">
+
+        <h2 class="cart-title">🛒 My Cart</h2>
+
+        <form action="/calculate_total" method="POST">
+
+            <div class="cart-table-wrapper">
+
+                <table class="cart-table">
+
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Product</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in cart_items %}
+
+                        <tr>
+
+                            <!-- Checkbox -->
+                            <td>
+                                <input type="checkbox" class="cart-checkbox" name="selected_products"
+                                    value="{{ item.product_id }}" {% if item.product_id|string in selected_products
+                                    %}checked{% endif %}>
+                            </td>
+
+
+                            <!-- Product Image -->
+                            <td>
+                                <img class="cart-product-image" src="{{ url_for(
+                                        'static',
+                                        filename='uploads/product_images/' + item.image
+                                    ) }}" alt="{{ item.name }}">
+                            </td>
+
+
+                            <!-- Product Name -->
+                            <td>
+                                <div class="cart-product-name">
+                                    {{ item.name }}
+                                </div>
+                            </td>
+
+
+                            <!-- Price -->
+                            <td>
+                                <span class="cart-price">
+                                    ₹{{ item.price }}
+                                </span>
+                            </td>
+
+
+                            <!-- Quantity -->
+                            <td>
+
+                                <div class="cart-quantity">
+
+                                    <a class="quantity-btn" href="{{ url_for(
+                                            'decrease_quantity',
+                                            product_id=item.product_id
+                                        ) }}">
+                                        −
+                                    </a>
+
+                                    <span class="quantity-number">
+                                        {{ item.quantity }}
+                                    </span>
+
+                                    <a class="quantity-btn" href="{{ url_for(
+                                            'increase_quantity',
+                                            product_id=item.product_id
+                                        ) }}">
+                                        +
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Product Total -->
+                            <td>
+                                <span class="cart-total">
+                                    ₹{{ item.price * item.quantity }}
+                                </span>
+                            </td>
+
+
+                            <!-- Remove -->
+                            <td>
+
+                                <a class="remove-btn" href="{{ url_for(
+                                        'remove_from_cart',
+                                        product_id=item.product_id
+                                    ) }}">
+                                    Remove
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- Bottom Cart Section -->
+
+            <div class="cart-bottom">
+
+                <div class="cart-actions">
+
+                    <button type="submit" class="cart-btn calculate-btn">
+                        Calculate Total
+                    </button>
+
+                    <button type="submit" class="cart-btn pay-btn" formaction="/checkout-address">
+                        Pay Now
+                    </button>
+
+                </div>
+
+
+                <div class="grand-total-box">
+
+                    <h3>
+                        Grand Total:
+                        <span class="grand-total-amount">
+                            ₹{{ total }}
+                        </span>
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</body>
+
+</html>

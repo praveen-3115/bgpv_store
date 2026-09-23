@@ -1,0 +1,696 @@
+/* =========================================================
+   SASSY STORE - COMMON ECOMMERCE CSS
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f5f7fb;
+    color: #0f172a;
+}
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #0f172a;
+}
+
+h1 {
+    margin: 25px 0;
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+h3 {
+    font-size: 22px;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+    color: #0f172a;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #d96846;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button,
+input[type="submit"],
+input[type="button"] {
+    border: none;
+    border-radius: 6px;
+    padding: 11px 20px;
+    background: #0f172a;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background: #d96846;
+}
+
+
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    margin-top: 6px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #d96846;
+    box-shadow: 0 0 0 3px rgba(217, 104, 70, 0.12);
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+
+/* =========================================================
+   LABELS
+   ========================================================= */
+
+label {
+    display: inline-block;
+    margin-top: 10px;
+    color: #0f172a;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   COMMON CONTAINER
+   ========================================================= */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+nav {
+    background: #0f172a;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+nav a {
+    color: white;
+    padding: 10px 16px;
+    border-radius: 5px;
+}
+
+nav a:hover {
+    background: #d96846;
+    color: white;
+}
+
+
+/* =========================================================
+   LOGIN / REGISTER FORMS
+   ========================================================= */
+
+form {
+    width: 90%;
+    max-width: 450px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+}
+
+form table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+form td {
+    padding: 8px 5px;
+}
+
+form label {
+    margin-top: 0;
+}
+
+form button {
+    width: 100%;
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   ADMIN DASHBOARD
+   Works with your current simple HTML
+   ========================================================= */
+
+body > h2 {
+    margin: 0;
+    padding: 25px;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+}
+
+body > h2 + a {
+    margin-top: 30px;
+}
+
+body > a {
+    display: inline-block;
+    margin: 30px 8px 10px;
+    padding: 12px 20px;
+    background: #0f172a;
+    color: white;
+    border-radius: 6px;
+}
+
+body > a:hover {
+    background: #d96846;
+    color: white;
+}
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+a[href="/admin-logout"] {
+    background: #d96846;
+    color: white;
+}
+
+a[href="/admin-logout"]:hover {
+    background: #b94f31;
+}
+
+
+/* =========================================================
+   FLASH MESSAGES
+   ========================================================= */
+
+p[style*="color:red"] {
+    width: fit-content;
+    max-width: 90%;
+    margin: 15px auto;
+    padding: 10px 18px;
+    background: #fee2e2;
+    color: #b91c1c !important;
+    border-radius: 6px;
+}
+
+p[style*="color:green"] {
+    width: fit-content;
+    max-width: 90%;
+    margin: 15px auto;
+    padding: 10px 18px;
+    background: #dcfce7;
+    color: #166534 !important;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   PRODUCT SECTION
+   ========================================================= */
+
+.products-section {
+    width: 90%;
+    max-width: 1300px;
+    margin: 40px auto;
+}
+
+.products-section > h2 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+   ========================================================= */
+
+.product-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.product-card img {
+    display: block;
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.product-card h3 {
+    margin: 18px 15px 8px;
+    font-size: 19px;
+}
+
+.product-card p {
+    margin: 5px 15px;
+    color: #64748b;
+}
+
+.product-card h4 {
+    margin: 12px 15px;
+    color: #d96846;
+    font-size: 20px;
+}
+
+.product-card a {
+    display: inline-block;
+    margin: 10px 15px 0;
+    padding: 10px 16px;
+    background: #0f172a;
+    color: white;
+    border-radius: 6px;
+}
+
+.product-card a:hover {
+    background: #d96846;
+    color: white;
+}
+
+
+/* =========================================================
+   ADMIN PRODUCT TABLE
+   ========================================================= */
+
+table {
+    width: 90%;
+    max-width: 1300px;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+th {
+    background: #0f172a;
+    color: white;
+    padding: 14px 12px;
+    text-align: center;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+td img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   TABLE ACTION LINKS
+   ========================================================= */
+
+td a {
+    display: inline-block;
+    padding: 7px 12px;
+    margin: 3px;
+    border-radius: 5px;
+    background: #0f172a;
+    color: white;
+    font-size: 13px;
+}
+
+td a:hover {
+    background: #d96846;
+    color: white;
+}
+
+
+/* =========================================================
+   SEARCH / FILTER
+   ========================================================= */
+
+form[action*="item-list"] {
+    max-width: 1000px;
+    margin: 25px auto;
+    padding: 15px;
+    box-shadow: none;
+    background: transparent;
+}
+
+form[action*="item-list"] input,
+form[action*="item-list"] select {
+    width: auto;
+    min-width: 180px;
+    margin: 5px;
+}
+
+form[action*="item-list"] button {
+    width: auto;
+    margin: 5px;
+}
+
+
+/* =========================================================
+   PRODUCT DETAILS
+   ========================================================= */
+
+.product-details {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+.cart-container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.cart-container table {
+    width: 100%;
+    margin: 0;
+    box-shadow: none;
+}
+
+.cart-container img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+
+/* =========================================================
+   CART QUANTITY BUTTONS
+   ========================================================= */
+
+.cart-container button {
+    padding: 7px 12px;
+    margin: 2px;
+}
+
+.cart-container input[type="checkbox"] {
+    width: auto;
+}
+
+
+/* =========================================================
+   CHECKOUT / ADDRESS
+   ========================================================= */
+
+.checkout-container {
+    width: 90%;
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   ORDER SUCCESS
+   ========================================================= */
+
+.order-success {
+    width: 90%;
+    max-width: 650px;
+    margin: 60px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.10);
+}
+
+.order-success h1 {
+    color: #166534;
+}
+
+.order-success a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: #0f172a;
+    color: white;
+    border-radius: 6px;
+}
+
+.order-success a:hover {
+    background: #d96846;
+    color: white;
+}
+
+
+/* =========================================================
+   IMAGES
+   ========================================================= */
+
+img {
+    max-width: 100%;
+}
+
+
+/* =========================================================
+   MOBILE TABLE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .products-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    table {
+        width: 95%;
+        font-size: 14px;
+    }
+
+    th,
+    td {
+        padding: 9px 6px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 26px;
+    }
+
+    h2 {
+        font-size: 23px;
+    }
+
+    nav {
+        padding: 10px;
+    }
+
+    nav a {
+        width: 90%;
+        text-align: center;
+    }
+
+    form {
+        width: 92%;
+        padding: 22px;
+        margin: 25px auto;
+    }
+
+    form table {
+        width: 100%;
+    }
+
+    form td {
+        display: block;
+        width: 100%;
+        padding: 5px 0;
+    }
+
+    form td br {
+        display: none;
+    }
+
+    .products-section {
+        width: 92%;
+    }
+
+    .products-container {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .product-card img {
+        height: 230px;
+    }
+
+    table {
+        display: block;
+        width: 95%;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th,
+    td {
+        padding: 8px;
+    }
+
+    body > a {
+        display: block;
+        width: 80%;
+        max-width: 300px;
+        margin: 12px auto;
+        text-align: center;
+    }
+
+    .cart-container {
+        width: 95%;
+        padding: 12px;
+    }
+
+    .checkout-container {
+        width: 92%;
+        padding: 22px;
+    }
+
+    .order-success {
+        width: 90%;
+        padding: 25px;
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .product-card img {
+        height: 200px;
+    }
+
+    button,
+    input[type="submit"] {
+        width: 100%;
+    }
+
+}

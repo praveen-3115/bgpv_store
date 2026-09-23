@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delivery Address</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <h2>Delivery Address</h2>
+
+    <form action="/save_address" method="POST">
+
+        <table>
+
+            <tr>
+                <td><label>Full Name</label></td>
+                <td><input type="text" name="full_name" required></td>
+            </tr>
+
+            <tr>
+                <td><label>Phone Number</label></td>
+                <td><input type="tel" name="phone" required></td>
+            </tr>
+
+            <tr>
+                <td><label>Address</label></td>
+                <td><textarea name="address" required></textarea></td>
+            </tr>
+
+            <tr>
+                <td><label>City</label></td>
+                <td><input type="text" name="city" required></td>
+            </tr>
+
+            <tr>
+                <td><label>State</label></td>
+                <td><input type="text" name="state" required></td>
+            </tr>
+
+            <tr>
+                <td><label>Pincode</label></td>
+                <td><input type="text" name="pincode" required></td>
+            </tr>
+
+        </table>
+
+        <!-- Send selected product IDs to Flask -->
+        {% for product_id in selected_products %}
+        <input type="hidden" name="selected_products" value="{{ product_id }}">
+        {% endfor %}
+
+        <button type="submit">Continue to Payment</button>
+
+    </form>
+
+</body>
+
+</html>

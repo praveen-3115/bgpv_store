@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sassy_Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Welcome to Manaa Store</h1>
+
+        <nav>
+            <a href="{{url_for('admin_login')}}">Admin Login</a>
+
+            <a href="{{url_for('admin_register')}}">Admin Register</a>
+
+            <a href="{{url_for('user_login')}}">User Login</a>
+            <a href="{{url_for('user_register')}}">User Register</a>
+        </nav>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <p style="color:red;">{{ message }}</p>
+        {% endfor %}
+        {% endwith %}
+        <!-- Search Form -->
+        <div class="products-section">
+
+            <div class="products-container">
+
+                {% for product in products %}
+
+                <div class="product-card">
+
+                    <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}"
+                        alt="{{ product.name }}">
+
+                    <h3>{{ product.name }}</h3>
+
+                    <p>{{ product.category }}</p>
+
+                    <h4>₹{{ product.price }}</h4>
+
+                    <a href="/admin/view-item/{{ product.product_id }}">
+                        View Product
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>

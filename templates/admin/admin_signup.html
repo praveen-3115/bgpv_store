@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sassy store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <h1>Admin Registration</h1>
+    <!-- Flash messages-->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color: red;">{{message}}</p>
+    {% endfor %}
+    {% endwith %}
+    <form method="POST">
+        <label for="">Name:</label>
+        <input type="text" name="name" id="">
+        <br>
+        <br>
+        <label for="">Email:</label>
+        <br>
+        <input type="email" name="email" id=""><br><br>
+        <button type="submit">Send OTP</button>
+    </form>
+</body>
+
+</html>

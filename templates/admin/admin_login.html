@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <h2>Admin Login</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <p style="color:red;">{{ message }}</p>
+    {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="/admin-login">
+        <table>
+            <tr>
+                <td><label>Email:</label><br></td>
+                <td><input type="email" name="email" required><br><br></td>
+            </tr>
+            <tr>
+                <td><label>Password:</label><br></td>
+                <td><input type="password" name="password" required><br><br></td>
+            </tr>
+        </table>
+
+
+
+
+
+        <button type="submit">Login</button>
+
+    </form>
+
+</body>
+
+</html>

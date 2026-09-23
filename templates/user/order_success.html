@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Successful - Sassy Store</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="bg-light">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <header class="bg-dark text-white py-2">
+        <div class="container">
+
+            <h3 class="mb-0">
+                <i>Sassy Store</i>
+            </h3>
+
+        </div>
+    </header>
+
+
+    <!-- =========================
+         SUCCESS MESSAGE
+    ========================== -->
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-8 col-lg-7">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body text-center p-4 p-md-5">
+
+                        <!-- Success Icon -->
+                        <div class="mb-3">
+                            <span class="fs-1 text-success">
+                                ✓
+                            </span>
+                        </div>
+
+                        <h2 class="text-success mb-2">
+                            Order Placed Successfully!
+                        </h2>
+
+                        <p class="text-muted mb-4">
+                            Thank you for shopping with Sassy Store.
+                        </p>
+
+
+                        <!-- Order Information -->
+                        <div class="bg-light rounded p-3 mb-4 text-start">
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <strong>Order ID:</strong>
+                                <span>#{{ order.order_id }}</span>
+                            </div>
+
+                            {% if order.total_amount is defined %}
+                            <div class="d-flex justify-content-between">
+                                <strong>Total Amount:</strong>
+                                <span class="text-success fw-bold">
+                                    ₹{{ order.total_amount }}
+                                </span>
+                            </div>
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Delivery Address -->
+                        {% if delivery_address %}
+
+                        <div class="text-start mb-4">
+
+                            <h5 class="mb-3">
+                                Delivery Address
+                            </h5>
+
+                            <div class="border rounded p-3 bg-white">
+
+                                {% if delivery_address.full_name %}
+                                <strong>
+                                    {{ delivery_address.full_name }}
+                                </strong>
+                                <br>
+                                {% endif %}
+
+                                {% if delivery_address.phone %}
+                                {{ delivery_address.phone }}
+                                <br>
+                                {% endif %}
+
+                                {% if delivery_address.address %}
+                                {{ delivery_address.address }}
+                                <br>
+                                {% endif %}
+
+                                {% if delivery_address.city %}
+                                {{ delivery_address.city }},
+                                {% endif %}
+
+                                {% if delivery_address.state %}
+                                {{ delivery_address.state }}
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Ordered Items -->
+                        {% if order_items %}
+
+                        <div class="text-start mb-4">
+
+                            <h5 class="mb-3">
+                                Ordered Items
+                            </h5>
+
+                            <div class="list-group">
+
+                                {% for item in order_items %}
+
+                                <div class="list-group-item">
+
+                                    <div class="d-flex justify-content-between align-items-center">
+
+                                        <div>
+                                            <strong>
+                                                {{ item.product_name }}
+                                            </strong>
+
+                                            {% if item.quantity %}
+                                            <div class="text-muted small">
+                                                Quantity: {{ item.quantity }}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if item.total %}
+                                        <strong>
+                                            ₹{{ item.total }}
+                                        </strong>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        <!-- Buttons -->
+                        <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+
+                            <a href="/products" class="btn btn-primary">
+                                Continue Shopping
+                            </a>
+
+                            <a href="/user/orders" class="btn btn-outline-dark">
+                                My Orders
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+</body>
+
+</html>
