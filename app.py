@@ -32,17 +32,22 @@ mail=Mail(app)
 #sql_database connection
 def get_db():
 
+    print("DB HOST:", config.DB_HOST)
+    print("DB USER:", config.DB_USER)
+    print("DB NAME:", config.DB_NAME)
+    print("DB PORT:", config.DB_PORT)
+
     conn = mysql.connector.connect(
         host=config.DB_HOST,
         user=config.DB_USER,
         password=config.DB_PASSWORD,
-        database=config.DB_NAME
-         port=config.DB_PORT
+        database=config.DB_NAME,
+        port=config.DB_PORT
     )
 
     print("FLASK DATABASE CONNECTED!", config.DB_NAME)
-    return conn
 
+    return conn
 #Route-1 home page
 @app.route('/')
 def home():
