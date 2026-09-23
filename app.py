@@ -11,6 +11,10 @@ from flask import request, jsonify, render_template
 import traceback
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 
 

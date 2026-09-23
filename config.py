@@ -1,20 +1,25 @@
-secret_key="isha@123"
+from dotenv import load_dotenv
+import os
 
-#database configuration
-DB_HOST="localhost"
-DB_USER="root"
-DB_PASSWORD="isha"
-DB_NAME="sassy_store"
+load_dotenv()
 
-#email smtp settings
-MAIL_SERVER='smtp.gmail.com'
-MAIL_PORT ='587'
-MAIL_USE_TLS=True
-MAIL_USERNAME="praveenkumar78157815@gmail.com"
-MAIL_PASSWORD="uouotuxwgxtovhsk"
+# Flask
+secret_key = os.getenv("SECRET_KEY")
 
+# Database configuration
+DB_HOST = os.getenv("DB_HOST")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+DB_PORT = int(os.getenv("DB_PORT", 3306))
 
-#razorpay details
+# Email SMTP settings
+MAIL_SERVER = os.getenv("MAIL_SERVER", "smtp.gmail.com")
+MAIL_PORT = int(os.getenv("MAIL_PORT", 587))
+MAIL_USE_TLS = True
+MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
 
-RAZORPAY_KEY_ID = "rzp_test_TcB3pMphuLLwfP"
-RAZORPAY_KEY_SECRET = "0wzaRKI0P3dyiVGT45mCY6cS"
+# Razorpay details
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
