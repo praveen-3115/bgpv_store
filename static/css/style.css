@@ -2,7 +2,7 @@
    SASSY STORE - LUXURY OBSIDIAN DARK THEME
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 :root {
     --primary: #6366f1;              /* Electric Indigo */
@@ -133,6 +133,42 @@ header, nav.site-nav {
     font-weight: 800;
     color: #ffffff;
     letter-spacing: -0.5px;
+    text-decoration: none;
+}
+
+.brand-name {
+    font-style: italic;
+    font-weight: 800;
+    font-size: 1.45rem;
+    letter-spacing: -0.5px;
+    display: inline-flex;
+    align-items: baseline;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    transform: skewX(-4deg);
+    text-decoration: none;
+}
+
+.brand-bhar {
+    color: #38bdf8; /* Electric Sky Cyan */
+    text-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
+    font-style: italic;
+    font-weight: 800;
+}
+
+.brand-veen {
+    color: #f43f5e; /* Neon Coral Rose */
+    text-shadow: 0 0 16px rgba(244, 63, 94, 0.45);
+    font-style: italic;
+    font-weight: 800;
+}
+
+.brand-store {
+    color: #f8fafc; /* Crisp Bright White */
+    font-weight: 600;
+    margin-left: 6px;
+    font-style: italic;
+    font-size: 1.3rem;
+    letter-spacing: 0px;
 }
 
 .brand-badge {
