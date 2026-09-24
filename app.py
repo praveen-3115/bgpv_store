@@ -751,6 +751,180 @@ def user_logout():
     flash("Logged out successfully!", "success")
     return redirect('/user-login')
 
+# ---------------------------------------------------------
+# USER FORGOT PASSWORD & RESET
+# ---------------------------------------------------------
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'GET':
+        return render_template("user/forgot_password.html")
+
+    email = request.form.get('email', '').strip()
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT user_id, name FROM users WHERE email=%s", (email,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if not user:
+        flash("No account registered with that email address.", "danger")
+        return redirect('/forgot-password')
+
+    otp = random.randint(100000, 999999)
+    session['reset_email'] = email
+    session['reset_otp'] = str(otp)
+
+    try:
+        message = Message(
+            subject="Password Reset OTP - Sassy Store",
+            sender=config.MAIL_USERNAME,
+            recipients=[email]
+        )
+        message.body = (
+            f"Hello {user['name']},\n\n"
+            f"Your OTP for resetting your Sassy Store account password is: {otp}\n\n"
+            f"If you did not request this password reset, please ignore this email.\n\n"
+            f"Best regards,\nSassy Store Support Team"
+        )
+        mail.send(message)
+        flash("Password reset OTP has been sent to your email!", "success")
+        return redirect('/reset-password')
+    except Exception as e:
+        app.logger.error("Failed to send reset email: %s\n%s", str(e), traceback.format_exc())
+        flash("Failed to send OTP email. Please verify mail configuration or try again.", "danger")
+        return redirect('/forgot-password')
+
+
+@app.route('/reset-password', methods=['GET', 'POST'])
+def reset_password():
+    if 'reset_email' not in session or 'reset_otp' not in session:
+        flash("Please request a password reset first.", "warning")
+        return redirect('/forgot-password')
+
+    if request.method == 'GET':
+        return render_template("user/reset_password.html", email=session.get('reset_email'))
+
+    entered_otp = request.form.get('otp', '').strip()
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if str(session.get('reset_otp')) != str(entered_otp):
+        flash("Invalid OTP. Please check your email and try again.", "danger")
+        return redirect('/reset-password')
+
+    if new_password != confirm_password:
+        flash("Passwords do not match. Please re-enter.", "danger")
+        return redirect('/reset-password')
+
+    if len(new_password) < 6:
+        flash("Password must be at least 6 characters long.", "danger")
+        return redirect('/reset-password')
+
+    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    email = session.get('reset_email')
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET password=%s WHERE email=%s", (hashed_password, email))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    session.pop('reset_email', None)
+    session.pop('reset_otp', None)
+
+    flash("Password reset successfully! Please sign in with your new password.", "success")
+    return redirect('/user-login')
+
+# ---------------------------------------------------------
+# ADMIN FORGOT PASSWORD & RESET
+# ---------------------------------------------------------
+@app.route('/admin/forgot-password', methods=['GET', 'POST'])
+def admin_forgot_password():
+    if request.method == 'GET':
+        return render_template("admin/admin_forgot_password.html")
+
+    email = request.form.get('email', '').strip()
+
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT admin_id, name FROM admin WHERE email=%s", (email,))
+    admin = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if not admin:
+        flash("No admin account registered with that email address.", "danger")
+        return redirect('/admin/forgot-password')
+
+    otp = random.randint(100000, 999999)
+    session['admin_reset_email'] = email
+    session['admin_reset_otp'] = str(otp)
+
+    try:
+        message = Message(
+            subject="Admin Password Reset OTP - Sassy Store",
+            sender=config.MAIL_USERNAME,
+            recipients=[email]
+        )
+        message.body = (
+            f"Hello {admin['name']},\n\n"
+            f"Your OTP for resetting your Sassy Store Admin password is: {otp}\n\n"
+            f"If you did not request this, please secure your account immediately.\n\n"
+            f"Best regards,\nSassy Store Security Team"
+        )
+        mail.send(message)
+        flash("Admin password reset OTP sent to your email!", "success")
+        return redirect('/admin/reset-password')
+    except Exception as e:
+        app.logger.error("Failed to send admin reset email: %s\n%s", str(e), traceback.format_exc())
+        flash("Failed to send OTP email. Please verify mail configuration or try again.", "danger")
+        return redirect('/admin/forgot-password')
+
+
+@app.route('/admin/reset-password', methods=['GET', 'POST'])
+def admin_reset_password():
+    if 'admin_reset_email' not in session or 'admin_reset_otp' not in session:
+        flash("Please request an admin password reset first.", "warning")
+        return redirect('/admin/forgot-password')
+
+    if request.method == 'GET':
+        return render_template("admin/admin_reset_password.html", email=session.get('admin_reset_email'))
+
+    entered_otp = request.form.get('otp', '').strip()
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+
+    if str(session.get('admin_reset_otp')) != str(entered_otp):
+        flash("Invalid OTP. Try again.", "danger")
+        return redirect('/admin/reset-password')
+
+    if new_password != confirm_password:
+        flash("Passwords do not match.", "danger")
+        return redirect('/admin/reset-password')
+
+    if len(new_password) < 6:
+        flash("Password must be at least 6 characters long.", "danger")
+        return redirect('/admin/reset-password')
+
+    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    email = session.get('admin_reset_email')
+
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE admin SET password=%s WHERE email=%s", (hashed_password, email))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    session.pop('admin_reset_email', None)
+    session.pop('admin_reset_otp', None)
+
+    flash("Admin password reset successfully! Please log in.", "success")
+    return redirect('/admin-login')
+
 #route-5 admin dashoard
 @app.route('/user-dashboard')
 def user_dashboard():
