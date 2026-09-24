@@ -166,8 +166,12 @@
                         </h3>
 
                         <div class="d-flex justify-content-between align-items-center mt-auto pt-2 mb-3 border-top">
-                            <span class="h5 mb-0 fw-bold" style="color: #38bdf8; font-size: 1.35rem; font-weight: 800;">₹{{ "%.2f"|format(product.price|float) if product.price else "0.00" }}</span>
-                            <span class="badge" style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.3);">In Stock</span>
+                            <span class="h5 mb-0 fw-bold"
+                                style="color: #38bdf8; font-size: 1.35rem; font-weight: 800;">₹{{
+                                "%.2f"|format(product.price|float) if product.price else "0.00" }}</span>
+                            <span class="badge"
+                                style="background: rgba(16, 185, 129, 0.18); color: #10b981; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.3);">In
+                                Stock</span>
                         </div>
 
                         <!-- Actions -->

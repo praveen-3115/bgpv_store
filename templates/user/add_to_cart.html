@@ -260,7 +260,8 @@
         <div class="cart-title-section">
             <div>
                 <h1 class="h2 mb-1" style="color: #ffffff;">🛒 Shopping Cart</h1>
-                <p style="color: #94a3b8; margin: 0;">Review your selected items and update quantities before checkout.</p>
+                <p style="color: #94a3b8; margin: 0;">Review your selected items and update quantities before checkout.
+                </p>
             </div>
             <a href="/products" class="btn btn-secondary">Add More Products</a>
         </div>
@@ -298,7 +299,9 @@
                                 <!-- Checkbox -->
                                 <td>
                                     <input type="checkbox" class="cart-checkbox" name="selected_products"
-                                        value="{{ item.product_id }}" {% if selected_products is not defined or not selected_products or item.product_id|string in selected_products %}checked{% endif %}>
+                                        value="{{ item.product_id }}" {% if selected_products is not defined or not
+                                        selected_products or item.product_id|string in selected_products %}checked{%
+                                        endif %}>
                                 </td>
 
                                 <!-- Product Image -->
@@ -326,14 +329,16 @@
                                 <td>
                                     <div class="cart-quantity">
                                         <a class="quantity-btn"
-                                            href="{{ url_for('decrease_quantity', product_id=item.product_id) }}" title="Decrease">
+                                            href="{{ url_for('decrease_quantity', product_id=item.product_id) }}"
+                                            title="Decrease">
                                             −
                                         </a>
                                         <span class="quantity-number">
                                             {{ item.quantity }}
                                         </span>
                                         <a class="quantity-btn"
-                                            href="{{ url_for('increase_quantity', product_id=item.product_id) }}" title="Increase">
+                                            href="{{ url_for('increase_quantity', product_id=item.product_id) }}"
+                                            title="Increase">
                                             +
                                         </a>
                                     </div>
@@ -342,7 +347,8 @@
                                 <!-- Product Total -->
                                 <td>
                                     <span class="cart-total">
-                                        ₹{{ "%.2f"|format((item.price|float) * (item.quantity|int)) if item.price else "0.00" }}
+                                        ₹{{ "%.2f"|format((item.price|float) * (item.quantity|int)) if item.price else
+                                        "0.00" }}
                                     </span>
                                 </td>
 
@@ -365,7 +371,8 @@
                         <button type="submit" class="btn btn-secondary">
                             🔄 Recalculate Selected
                         </button>
-                        <button type="submit" class="btn btn-primary" formaction="/checkout-address" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
+                        <button type="submit" class="btn btn-primary" formaction="/checkout-address"
+                            style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
                             Proceed to Checkout →
                         </button>
                     </div>
@@ -384,7 +391,8 @@
             <div class="empty-cart-state">
                 <div class="empty-cart-icon">🛒</div>
                 <h3 style="color: #ffffff; margin-bottom: 8px;">Your cart is currently empty</h3>
-                <p style="color: #94a3b8; margin-bottom: 24px;">Looks like you haven't added anything to your cart yet.</p>
+                <p style="color: #94a3b8; margin-bottom: 24px;">Looks like you haven't added anything to your cart yet.
+                </p>
                 <a href="/products" class="btn btn-primary" style="padding: 12px 28px;">
                     Explore Products →
                 </a>

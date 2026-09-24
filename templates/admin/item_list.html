@@ -34,7 +34,8 @@
             align-items: center;
         }
 
-        .filter-row input, .filter-row select {
+        .filter-row input,
+        .filter-row select {
             width: auto;
             min-width: 180px;
         }
@@ -114,9 +115,11 @@
         <div class="admin-toolbar">
             <div>
                 <h1 class="h2 mb-1" style="color: #ffffff;">📦 Product Inventory</h1>
-                <p style="color: #94a3b8; margin: 0;">Manage pricing, categories, and item listings across the store.</p>
+                <p style="color: #94a3b8; margin: 0;">Manage pricing, categories, and item listings across the store.
+                </p>
             </div>
-            <a href="/admin/add-item" class="btn btn-primary" style="background: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+            <a href="/admin/add-item" class="btn btn-primary"
+                style="background: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
                 + Add New Product
             </a>
         </div>
@@ -126,7 +129,8 @@
             <div class="filter-row">
                 <!-- Search Form -->
                 <form method="GET" action="/admin/item-list">
-                    <input type="text" name="search" placeholder="Search product name..." value="{{ request.args.get('search', '') }}">
+                    <input type="text" name="search" placeholder="Search product name..."
+                        value="{{ request.args.get('search', '') }}">
                     <button type="submit" class="btn btn-secondary" style="padding: 10px 16px;">🔍 Search</button>
                 </form>
 
@@ -135,7 +139,8 @@
                     <select name="category" onchange="this.form.submit()">
                         <option value="">All Categories</option>
                         {% for cat in categories %}
-                        <option value="{{ cat.category }}" {% if request.args.get('category') == cat.category %}selected{% endif %}>
+                        <option value="{{ cat.category }}" {% if request.args.get('category')==cat.category %}selected{%
+                            endif %}>
                             {{ cat.category }}
                         </option>
                         {% endfor %}
@@ -143,7 +148,8 @@
                 </form>
 
                 {% if request.args.get('search') or request.args.get('category') %}
-                <a href="/admin/item-list" class="btn btn-secondary" style="padding: 9px 14px; font-size: 0.85rem;">Clear Filters</a>
+                <a href="/admin/item-list" class="btn btn-secondary"
+                    style="padding: 9px 14px; font-size: 0.85rem;">Clear Filters</a>
                 {% endif %}
             </div>
         </div>
@@ -167,11 +173,13 @@
                         <td style="text-align: center; font-weight: 700; color: #64748b;">#{{ product.product_id }}</td>
                         <td style="text-align: center;">
                             <img src="/static/uploads/product_images/{{ product.image }}" width="55" height="55"
-                                 style="border-radius: 8px; object-fit: contain; background: #070b14; padding: 3px;" alt="{{ product.name }}">
+                                style="border-radius: 8px; object-fit: contain; background: #070b14; padding: 3px;"
+                                alt="{{ product.name }}">
                         </td>
                         <td style="font-weight: 600; color: #ffffff;">{{ product.name }}</td>
                         <td>
-                            <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.25);">
+                            <span class="badge"
+                                style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.25);">
                                 {{ product.category }}
                             </span>
                         </td>
@@ -180,9 +188,12 @@
                         </td>
                         <td style="text-align: center;">
                             <div style="display: flex; gap: 6px; justify-content: center;">
-                                <a href="/admin/view-item/{{ product.product_id }}" class="action-link action-view">View</a>
-                                <a href="/admin/update-item/{{ product.product_id }}" class="action-link action-update">Edit</a>
-                                <a href="/admin/delete-item/{{ product.product_id }}" class="action-link action-delete">Delete</a>
+                                <a href="/admin/view-item/{{ product.product_id }}"
+                                    class="action-link action-view">View</a>
+                                <a href="/admin/update-item/{{ product.product_id }}"
+                                    class="action-link action-update">Edit</a>
+                                <a href="/admin/delete-item/{{ product.product_id }}"
+                                    class="action-link action-delete">Delete</a>
                             </div>
                         </td>
                     </tr>

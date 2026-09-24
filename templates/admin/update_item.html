@@ -62,7 +62,8 @@
         <div class="admin-form-card">
             <div class="form-header" style="text-align: left; margin-bottom: 25px;">
                 <h1 class="h2" style="color: #ffffff; margin-bottom: 6px;">✏️ Update Product</h1>
-                <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">Modify product specifications, catalog price, or upload a replacement photo.</p>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">Modify product specifications, catalog price,
+                    or upload a replacement photo.</p>
             </div>
 
             <!-- Flash Messages -->
@@ -101,7 +102,8 @@
                     <label>Current Image Preview</label>
                     <div class="current-img-preview">
                         <img src="/static/uploads/product_images/{{ product.image }}" width="60" height="60"
-                             style="border-radius: 6px; object-fit: contain; background: #050811;" alt="{{ product.name }}">
+                            style="border-radius: 6px; object-fit: contain; background: #050811;"
+                            alt="{{ product.name }}">
                         <span style="font-size: 0.85rem; color: #94a3b8;">{{ product.image }}</span>
                     </div>
                 </div>
@@ -112,7 +114,8 @@
                 </div>
 
                 <div style="display: flex; gap: 12px; margin-top: 20px;">
-                    <button type="submit" class="btn btn-primary" style="flex: 1; padding: 13px; font-size: 1rem; background: var(--primary);">
+                    <button type="submit" class="btn btn-primary"
+                        style="flex: 1; padding: 13px; font-size: 1rem; background: var(--primary);">
                         Save Changes
                     </button>
                     <a href="/admin/item-list" class="btn btn-secondary" style="padding: 13px 20px;">

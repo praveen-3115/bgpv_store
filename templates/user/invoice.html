@@ -89,22 +89,29 @@
                 background: #ffffff !important;
                 color: #000000 !important;
             }
+
             .invoice-card {
                 box-shadow: none !important;
                 border: 1px solid #ccc !important;
                 background: #ffffff !important;
                 color: #000000 !important;
             }
-            header, footer, .no-print {
+
+            header,
+            footer,
+            .no-print {
                 display: none !important;
             }
+
             .invoice-table {
                 background: #ffffff !important;
             }
+
             .invoice-table th {
                 background: #f1f5f9 !important;
                 color: #000000 !important;
             }
+
             .invoice-table td {
                 color: #000000 !important;
             }
@@ -142,7 +149,9 @@
                     <h2 class="h4" style="color: #ffffff; margin-bottom: 8px;">Invoice #{{ order.order_id }}</h2>
                     <p><strong>Date:</strong> {{ order.created_at }}</p>
                     <p><strong>Customer ID:</strong> #{{ order.user_id }}</p>
-                    <p><span class="badge" style="background: rgba(16, 185, 129, 0.18); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">Payment Completed</span></p>
+                    <p><span class="badge"
+                            style="background: rgba(16, 185, 129, 0.18); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">Payment
+                            Completed</span></p>
                 </div>
             </div>
 
@@ -161,7 +170,8 @@
                         <td style="font-weight: 600; color: #ffffff;">{{ it.product_name }}</td>
                         <td style="text-align: center;">{{ it.quantity }}</td>
                         <td style="text-align: right;">₹{{ "%.2f"|format(it.price|float) if it.price else "0.00" }}</td>
-                        <td style="text-align: right; color: #38bdf8; font-weight: 700;">₹{{ "%.2f"|format((it.price|float) * (it.quantity|int)) if it.price else "0.00" }}</td>
+                        <td style="text-align: right; color: #38bdf8; font-weight: 700;">₹{{
+                            "%.2f"|format((it.price|float) * (it.quantity|int)) if it.price else "0.00" }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -170,7 +180,8 @@
             <div class="invoice-total-box">
                 <div class="invoice-total-content">
                     <p style="margin: 0 0 6px 0; color: #94a3b8; font-size: 0.9rem;">Total Paid via Razorpay</p>
-                    <h3 style="margin: 0; font-size: 1.6rem; color: #10b981; font-weight: 800;">₹{{ "%.2f"|format(order.amount|float) if order.amount else "0.00" }}</h3>
+                    <h3 style="margin: 0; font-size: 1.6rem; color: #10b981; font-weight: 800;">₹{{
+                        "%.2f"|format(order.amount|float) if order.amount else "0.00" }}</h3>
                 </div>
             </div>
         </div>
