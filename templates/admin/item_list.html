@@ -1,82 +1,209 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>All Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Inventory | Sassy Store Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-row form {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-row input, .filter-row select {
+            width: auto;
+            min-width: 180px;
+        }
+
+        .action-link {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .action-view {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8 !important;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .action-view:hover {
+            background: #6366f1;
+            color: #ffffff !important;
+        }
+
+        .action-update {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24 !important;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .action-update:hover {
+            background: #f59e0b;
+            color: #ffffff !important;
+        }
+
+        .action-delete {
+            background: rgba(244, 63, 94, 0.15);
+            color: #fda4af !important;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+        }
+
+        .action-delete:hover {
+            background: #f43f5e;
+            color: #ffffff !important;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/admin-dashboard" class="brand-logo">
+                <span class="brand-badge" style="background: linear-gradient(135deg, #0f172a, #334155);">🛡️</span>
+                <span>Admin Console</span>
+            </a>
+            <nav>
+                <a href="/admin-dashboard">← Dashboard</a>
+                <a href="/admin/add-item" class="nav-btn-primary" style="padding: 7px 14px;">+ Add Product</a>
+                <a href="/admin-logout" class="nav-btn btn-danger" style="padding: 7px 14px;">Logout</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2>Product List</h2>
-
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
-    <!-- Search Form -->
-    <form method="GET" action="/admin/item-list">
-        <input type="text" name="search" placeholder="Search product..." value="{{ request.args.get('search', '') }}">
-        <button type="submit">Search</button>
-    </form>
-
-    <br>
-
-    <!-- Category Filter -->
-    <form method="GET" action="/admin/item-list">
-        <select name="category">
-            <option value="">All Categories</option>
-
-            {% for cat in categories %}
-            <option value="{{ cat.category }}" {% if request.args.get('category')==cat.category %} selected {% endif %}>
-                {{ cat.category }}
-            </option>
-            {% endfor %}
-        </select>
-        <button type="submit">Filter</button>
-    </form>
-
-
-    <a href="/admin/add-item">Add New Product</a>
-
-    <table border="1" cellpadding="10">
-        <tr>
-            <th>ID</th>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>View</th>
-            <th colspan="2">Actions</th>
-        </tr>
-
-        {% for product in products %}
-        <tr>
-            <td>{{ product.product_id }}</td>
-
-            <td>
-                <img src="/static/uploads/product_images/{{ product.image }}" width="70" height="70">
-            </td>
-
-            <td>{{ product.name }}</td>
-            <td>{{ product.category }}</td>
-            <td>₹{{ product.price }}</td>
-
-            <td>
-                <a href="/admin/view-item/{{ product.product_id }}">View</a>
-            </td>
-            <td>
-                <a href="/admin/update-item/{{product.product_id}}">Update</a>
-            </td>
-            <td>
-                <a href="/admin/delete-item/{{product.product_id}}">Delete</a>
-            </td>
-        </tr>
+    <main class="container" style="margin-top: 35px; margin-bottom: 60px;">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </table>
-    <a href="/admin-dashboard">Back to dashboard</a>
+        {% endif %}
+        {% endwith %}
+
+        <div class="admin-toolbar">
+            <div>
+                <h1 class="h2 mb-1" style="color: #ffffff;">📦 Product Inventory</h1>
+                <p style="color: #94a3b8; margin: 0;">Manage pricing, categories, and item listings across the store.</p>
+            </div>
+            <a href="/admin/add-item" class="btn btn-primary" style="background: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);">
+                + Add New Product
+            </a>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="card" style="padding: 16px 20px; margin-bottom: 25px;">
+            <div class="filter-row">
+                <!-- Search Form -->
+                <form method="GET" action="/admin/item-list">
+                    <input type="text" name="search" placeholder="Search product name..." value="{{ request.args.get('search', '') }}">
+                    <button type="submit" class="btn btn-secondary" style="padding: 10px 16px;">🔍 Search</button>
+                </form>
+
+                <!-- Category Filter -->
+                <form method="GET" action="/admin/item-list">
+                    <select name="category" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.category }}" {% if request.args.get('category') == cat.category %}selected{% endif %}>
+                            {{ cat.category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+
+                {% if request.args.get('search') or request.args.get('category') %}
+                <a href="/admin/item-list" class="btn btn-secondary" style="padding: 9px 14px; font-size: 0.85rem;">Clear Filters</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px; text-align: center;">ID</th>
+                        <th style="width: 90px; text-align: center;">Image</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th style="text-align: center; width: 220px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td style="text-align: center; font-weight: 700; color: #64748b;">#{{ product.product_id }}</td>
+                        <td style="text-align: center;">
+                            <img src="/static/uploads/product_images/{{ product.image }}" width="55" height="55"
+                                 style="border-radius: 8px; object-fit: contain; background: #070b14; padding: 3px;" alt="{{ product.name }}">
+                        </td>
+                        <td style="font-weight: 600; color: #ffffff;">{{ product.name }}</td>
+                        <td>
+                            <span class="badge" style="background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.25);">
+                                {{ product.category }}
+                            </span>
+                        </td>
+                        <td style="font-weight: 800; color: #38bdf8; font-size: 1.05rem;">
+                            ₹{{ "%.2f"|format(product.price|float) if product.price else "0.00" }}
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; gap: 6px; justify-content: center;">
+                                <a href="/admin/view-item/{{ product.product_id }}" class="action-link action-view">View</a>
+                                <a href="/admin/update-item/{{ product.product_id }}" class="action-link action-update">Edit</a>
+                                <a href="/admin/delete-item/{{ product.product_id }}" class="action-link action-delete">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            No products match your search or filter criteria.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store Administrative Console.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

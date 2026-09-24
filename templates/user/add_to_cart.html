@@ -4,165 +4,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>My Cart</title>
-
+    <title>My Cart | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
     <style>
-        /* ================================
-           CART PAGE
-        ================================= */
+        .cart-page-wrapper {
+            max-width: 1240px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+        }
 
-        .cart-page {
-            width: 100%;
-            padding: 30px;
+        .cart-title-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .cart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 25px;
+            box-shadow: var(--shadow-xl);
         }
 
         .cart-page form {
             width: 100%;
             max-width: none;
             margin: 0;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border: none;
         }
-
-        .cart-title {
-            font-size: 30px;
-            margin-bottom: 25px;
-            color: #111827;
-        }
-
 
         .cart-table-wrapper {
             width: 100%;
+            overflow-x: auto;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
         }
 
         .cart-table {
-            width: 1000px;
-            max-width: none;
+            width: 100%;
             border-collapse: collapse;
-            table-layout: auto;
+            text-align: center;
+            background: #0b101b;
         }
 
         .cart-table th {
-            background: #111827;
-            color: white;
-            padding: 15px 12px;
-            text-align: center;
-            font-size: 14px;
+            background: #070b14;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            padding: 16px 14px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
         }
 
         .cart-table td {
-            padding: 15px 12px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 14px;
+            border-bottom: 1px solid var(--border-color);
+            color: #cbd5e1;
             vertical-align: middle;
+            font-size: 0.95rem;
         }
 
-        .cart-table tr:last-child td {
-            border-bottom: none;
+        .cart-table tbody tr:hover td {
+            background: #111827;
         }
-
-        .cart-table tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        /* Product image */
 
         .cart-product-image {
-            width: 90px;
-            height: 90px;
+            width: 75px;
+            height: 75px;
             object-fit: contain;
-            border-radius: 10px;
-            margin: auto;
-            background: #f8fafc;
-            padding: 5px;
+            border-radius: 8px;
+            background: #050811;
+            border: 1px solid var(--border-color-light);
+            padding: 4px;
         }
-
-        /* Product name */
 
         .cart-product-name {
             font-weight: 600;
-            color: #1f2937;
-            max-width: 180px;
+            color: #ffffff;
+            max-width: 220px;
+            text-align: left;
+            margin: 0 auto;
+            line-height: 1.4;
         }
-
-        /* Checkbox */
 
         .cart-checkbox {
             width: 18px !important;
             height: 18px;
             cursor: pointer;
-            accent-color: #2563eb;
+            accent-color: var(--primary);
         }
 
-        /* Quantity */
-
         .cart-quantity {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            gap: 8px;
+            background: #070b14;
+            border: 1px solid var(--border-color-light);
+            border-radius: 8px;
+            padding: 4px 8px;
         }
 
         .quantity-btn {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 0 !important;
             border-radius: 6px;
-            background: #e5e7eb !important;
-            color: #111827 !important;
-            font-size: 20px !important;
-            font-weight: 600;
+            background: #1e293b !important;
+            color: #ffffff !important;
+            font-size: 16px !important;
+            font-weight: 700;
             text-decoration: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            transition: var(--transition);
         }
 
         .quantity-btn:hover {
-            background: #2563eb !important;
-            color: white !important;
+            background: var(--primary) !important;
+            transform: scale(1.05);
         }
 
         .quantity-number {
-            min-width: 25px;
-            font-weight: 600;
-            color: #111827;
+            min-width: 24px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
         }
-
-        /* Remove */
-
-        .remove-btn {
-            color: #dc2626 !important;
-            background: #fee2e2;
-            padding: 7px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .remove-btn:hover {
-            background: #dc2626;
-            color: white !important;
-        }
-
-        /* Price */
 
         .cart-price {
             font-weight: 600;
-            color: #374151;
+            color: #94a3b8;
         }
 
         .cart-total {
-            font-weight: 700;
-            color: #111827;
+            font-weight: 800;
+            color: #38bdf8;
+            font-size: 1.05rem;
         }
 
-        /* Bottom section */
+        .remove-btn {
+            display: inline-block;
+            color: #fda4af !important;
+            background: rgba(244, 63, 94, 0.15);
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .remove-btn:hover {
+            background: #f43f5e;
+            color: #ffffff !important;
+            box-shadow: 0 0 12px rgba(244, 63, 94, 0.4);
+        }
 
         .cart-bottom {
-            margin-top: 25px;
+            margin-top: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -176,365 +188,217 @@
             flex-wrap: wrap;
         }
 
-        .cart-btn {
-            border: none;
-            padding: 12px 22px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.25s ease;
-        }
-
-        .calculate-btn {
-            background: #2563eb;
-            color: white;
-        }
-
-        .calculate-btn:hover {
-            background: #1d4ed8;
-        }
-
-        .pay-btn {
-            background: #16a34a;
-            color: white;
-        }
-
-        .pay-btn:hover {
-            background: #15803d;
-        }
-
-        /* Grand total */
-
         .grand-total-box {
-            background: white;
-            padding: 15px 22px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e5e7eb;
+            background: #0b1120;
+            padding: 18px 28px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color-light);
+            box-shadow: var(--shadow-md);
         }
 
         .grand-total-box h3 {
             margin: 0;
-            font-size: 20px;
-            color: #111827;
+            font-size: 1.35rem;
+            color: #cbd5e1;
+            font-weight: 600;
         }
 
         .grand-total-amount {
-            color: #16a34a;
+            color: #10b981;
+            font-weight: 800;
+            margin-left: 8px;
         }
 
+        .empty-cart-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
 
-        /* ================================
-           TABLET
-        ================================= */
+        .empty-cart-icon {
+            font-size: 4rem;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
 
         @media (max-width: 768px) {
-
-            .cart-page {
-                width: 95%;
-                margin: 25px auto;
-            }
-
-            .cart-title {
-                font-size: 26px;
-            }
-
             .cart-bottom {
-                flex-direction: column;
+                flex-direction: column-reverse;
                 align-items: stretch;
             }
 
             .cart-actions {
-                width: 100%;
-            }
-
-            .cart-btn {
-                flex: 1;
-            }
-
-            .grand-total-box {
-                width: 100%;
-                text-align: center;
-            }
-        }
-
-
-        /* ================================
-           MOBILE
-        ================================= */
-
-        @media (max-width: 500px) {
-
-            .cart-page {
-                width: 94%;
-                margin: 20px auto;
-            }
-
-            .cart-title {
-                font-size: 23px;
-                margin-bottom: 18px;
-            }
-
-            @media (max-width: 500px) {
-
-                .cart-page {
-                    width: 96%;
-                    margin: 20px auto;
-                }
-
-                .cart-title {
-                    font-size: 23px;
-                }
-
-                .cart-table {
-                    width: 100%;
-                    table-layout: fixed;
-                }
-
-                .cart-table th,
-                .cart-table td {
-                    padding: 7px 3px;
-                    font-size: 11px;
-                    word-break: break-word;
-                }
-
-                .cart-product-image {
-                    width: 45px;
-                    height: 45px;
-                }
-
-                .cart-product-name {
-                    font-size: 11px;
-                    max-width: 70px;
-                }
-
-                .cart-quantity {
-                    gap: 2px;
-                }
-
-                .quantity-btn {
-                    width: 22px;
-                    height: 22px;
-                    font-size: 14px !important;
-                }
-
-                .quantity-number {
-                    min-width: 15px;
-                    font-size: 11px;
-                }
-
-                .remove-btn {
-                    padding: 4px 5px;
-                    font-size: 10px;
-                }
-
-                .cart-bottom {
-                    width: 100%;
-                }
-
-                .cart-actions {
-                    width: 100%;
-                    flex-direction: column;
-                }
-
-                .cart-btn {
-                    width: 100%;
-                }
-
-                .grand-total-box {
-                    width: 100%;
-                    text-align: center;
-                }
-            }
-
-            .quantity-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 17px !important;
-            }
-
-            .cart-quantity {
-                gap: 6px;
-            }
-
-            .remove-btn {
-                padding: 6px 9px;
-                font-size: 12px;
-            }
-
-            .cart-actions {
                 flex-direction: column;
             }
 
-            .cart-btn {
+            .cart-actions button {
                 width: 100%;
             }
 
-            .grand-total-box h3 {
-                font-size: 18px;
+            .grand-total-box {
+                text-align: center;
             }
         }
     </style>
-
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
+            <nav>
+                <a href="/products">← Continue Shopping</a>
+                <a href="/user-dashboard">Dashboard</a>
+            </nav>
+        </div>
+    </header>
 
-    <main class="cart-page">
+    <main class="cart-page-wrapper">
+        <div class="cart-title-section">
+            <div>
+                <h1 class="h2 mb-1" style="color: #ffffff;">🛒 Shopping Cart</h1>
+                <p style="color: #94a3b8; margin: 0;">Review your selected items and update quantities before checkout.</p>
+            </div>
+            <a href="/products" class="btn btn-secondary">Add More Products</a>
+        </div>
 
-        <h2 class="cart-title">🛒 My Cart</h2>
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-        <form action="/calculate_total" method="POST">
+        <div class="cart-card">
+            {% if cart_items and cart_items|length > 0 %}
+            <form action="/calculate_total" method="POST">
+                <div class="cart-table-wrapper">
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Select</th>
+                                <th>Product</th>
+                                <th style="text-align: left;">Name</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart_items %}
+                            <tr>
+                                <!-- Checkbox -->
+                                <td>
+                                    <input type="checkbox" class="cart-checkbox" name="selected_products"
+                                        value="{{ item.product_id }}" {% if selected_products is not defined or not selected_products or item.product_id|string in selected_products %}checked{% endif %}>
+                                </td>
 
-            <div class="cart-table-wrapper">
+                                <!-- Product Image -->
+                                <td>
+                                    <img class="cart-product-image"
+                                        src="{{ url_for('static', filename='uploads/product_images/' + item.image) }}"
+                                        alt="{{ item.name }}" loading="lazy">
+                                </td>
 
-                <table class="cart-table">
+                                <!-- Product Name -->
+                                <td style="text-align: left;">
+                                    <div class="cart-product-name">
+                                        {{ item.name }}
+                                    </div>
+                                </td>
 
-                    <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Product</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Total</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for item in cart_items %}
-
-                        <tr>
-
-                            <!-- Checkbox -->
-                            <td>
-                                <input type="checkbox" class="cart-checkbox" name="selected_products"
-                                    value="{{ item.product_id }}" {% if item.product_id|string in selected_products
-                                    %}checked{% endif %}>
-                            </td>
-
-
-                            <!-- Product Image -->
-                            <td>
-                                <img class="cart-product-image" src="{{ url_for(
-                                        'static',
-                                        filename='uploads/product_images/' + item.image
-                                    ) }}" alt="{{ item.name }}">
-                            </td>
-
-
-                            <!-- Product Name -->
-                            <td>
-                                <div class="cart-product-name">
-                                    {{ item.name }}
-                                </div>
-                            </td>
-
-
-                            <!-- Price -->
-                            <td>
-                                <span class="cart-price">
-                                    ₹{{ item.price }}
-                                </span>
-                            </td>
-
-
-                            <!-- Quantity -->
-                            <td>
-
-                                <div class="cart-quantity">
-
-                                    <a class="quantity-btn" href="{{ url_for(
-                                            'decrease_quantity',
-                                            product_id=item.product_id
-                                        ) }}">
-                                        −
-                                    </a>
-
-                                    <span class="quantity-number">
-                                        {{ item.quantity }}
+                                <!-- Price -->
+                                <td>
+                                    <span class="cart-price">
+                                        ₹{{ "%.2f"|format(item.price|float) if item.price else "0.00" }}
                                     </span>
+                                </td>
 
-                                    <a class="quantity-btn" href="{{ url_for(
-                                            'increase_quantity',
-                                            product_id=item.product_id
-                                        ) }}">
-                                        +
+                                <!-- Quantity -->
+                                <td>
+                                    <div class="cart-quantity">
+                                        <a class="quantity-btn"
+                                            href="{{ url_for('decrease_quantity', product_id=item.product_id) }}" title="Decrease">
+                                            −
+                                        </a>
+                                        <span class="quantity-number">
+                                            {{ item.quantity }}
+                                        </span>
+                                        <a class="quantity-btn"
+                                            href="{{ url_for('increase_quantity', product_id=item.product_id) }}" title="Increase">
+                                            +
+                                        </a>
+                                    </div>
+                                </td>
+
+                                <!-- Product Total -->
+                                <td>
+                                    <span class="cart-total">
+                                        ₹{{ "%.2f"|format((item.price|float) * (item.quantity|int)) if item.price else "0.00" }}
+                                    </span>
+                                </td>
+
+                                <!-- Remove -->
+                                <td>
+                                    <a class="remove-btn"
+                                        href="{{ url_for('remove_from_cart', product_id=item.product_id) }}">
+                                        ✕ Remove
                                     </a>
-
-                                </div>
-
-                            </td>
-
-
-                            <!-- Product Total -->
-                            <td>
-                                <span class="cart-total">
-                                    ₹{{ item.price * item.quantity }}
-                                </span>
-                            </td>
-
-
-                            <!-- Remove -->
-                            <td>
-
-                                <a class="remove-btn" href="{{ url_for(
-                                        'remove_from_cart',
-                                        product_id=item.product_id
-                                    ) }}">
-                                    Remove
-                                </a>
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            <!-- Bottom Cart Section -->
-
-            <div class="cart-bottom">
-
-                <div class="cart-actions">
-
-                    <button type="submit" class="cart-btn calculate-btn">
-                        Calculate Total
-                    </button>
-
-                    <button type="submit" class="cart-btn pay-btn" formaction="/checkout-address">
-                        Pay Now
-                    </button>
-
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
 
+                <!-- Bottom Cart Section -->
+                <div class="cart-bottom">
+                    <div class="cart-actions">
+                        <button type="submit" class="btn btn-secondary">
+                            🔄 Recalculate Selected
+                        </button>
+                        <button type="submit" class="btn btn-primary" formaction="/checkout-address" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
+                            Proceed to Checkout →
+                        </button>
+                    </div>
 
-                <div class="grand-total-box">
-
-                    <h3>
-                        Grand Total:
-                        <span class="grand-total-amount">
-                            ₹{{ total }}
-                        </span>
-                    </h3>
-
+                    <div class="grand-total-box">
+                        <h3>
+                            Grand Total:
+                            <span class="grand-total-amount">
+                                ₹{{ "%.2f"|format(total|float) if total else "0.00" }}
+                            </span>
+                        </h3>
+                    </div>
                 </div>
-
+            </form>
+            {% else %}
+            <div class="empty-cart-state">
+                <div class="empty-cart-icon">🛒</div>
+                <h3 style="color: #ffffff; margin-bottom: 8px;">Your cart is currently empty</h3>
+                <p style="color: #94a3b8; margin-bottom: 24px;">Looks like you haven't added anything to your cart yet.</p>
+                <a href="/products" class="btn btn-primary" style="padding: 12px 28px;">
+                    Explore Products →
+                </a>
             </div>
-
-        </form>
-
+            {% endif %}
+        </div>
     </main>
 
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

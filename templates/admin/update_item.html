@@ -1,48 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Update Product</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product | Sassy Store Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .admin-form-container {
+            max-width: 600px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+        }
+
+        .admin-form-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .admin-form-card form {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            max-width: 100%;
+        }
+
+        .current-img-preview {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #080c14;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color-light);
+            margin-bottom: 8px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/admin-dashboard" class="brand-logo">
+                <span class="brand-badge" style="background: linear-gradient(135deg, #0f172a, #334155);">🛡️</span>
+                <span>Admin Console</span>
+            </a>
+            <nav>
+                <a href="/admin/item-list">← Inventory</a>
+                <a href="/admin-dashboard">Dashboard</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2>Update Product</h2>
+    <main class="container admin-form-container">
+        <div class="admin-form-card">
+            <div class="form-header" style="text-align: left; margin-bottom: 25px;">
+                <h1 class="h2" style="color: #ffffff; margin-bottom: 6px;">✏️ Update Product</h1>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">Modify product specifications, catalog price, or upload a replacement photo.</p>
+            </div>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:green;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-    <form method="POST" action="/admin/update-item/{{ product.product_id }}" enctype="multipart/form-data">
+            <form method="POST" action="/admin/update-item/{{ product.product_id }}" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="name">Product Title</label>
+                    <input type="text" id="name" name="name" value="{{ product.name }}" required>
+                </div>
 
-        <label>Product Name:</label><br>
-        <input type="text" name="name" value="{{ product.name }}" required><br><br>
+                <div class="form-group">
+                    <label for="description">Detailed Description</label>
+                    <textarea id="description" name="description" rows="4" required>{{ product.description }}</textarea>
+                </div>
 
-        <label>Description:</label><br>
-        <textarea name="description" required>{{ product.description }}</textarea><br><br>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <input type="text" id="category" name="category" value="{{ product.category }}" required>
+                </div>
 
-        <label>Category:</label><br>
-        <input type="text" name="category" value="{{ product.category }}" required><br><br>
+                <div class="form-group">
+                    <label for="price">Price (₹ INR)</label>
+                    <input type="number" step="0.01" id="price" name="price" value="{{ product.price }}" required>
+                </div>
 
-        <label>Price:</label><br>
-        <input type="number" step="0.01" name="price" value="{{ product.price }}" required><br><br>
+                <div class="form-group">
+                    <label>Current Image Preview</label>
+                    <div class="current-img-preview">
+                        <img src="/static/uploads/product_images/{{ product.image }}" width="60" height="60"
+                             style="border-radius: 6px; object-fit: contain; background: #050811;" alt="{{ product.name }}">
+                        <span style="font-size: 0.85rem; color: #94a3b8;">{{ product.image }}</span>
+                    </div>
+                </div>
 
-        <label>Old Image:</label><br>
-        <img src="/static/uploads/product_images/{{ product.image }}" width="120"><br><br>
+                <div class="form-group">
+                    <label for="image">Choose Replacement Image (Optional)</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
 
-        <label>Choose New Image (Optional):</label><br>
-        <input type="file" name="image" accept="image/*"><br><br>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1; padding: 13px; font-size: 1rem; background: var(--primary);">
+                        Save Changes
+                    </button>
+                    <a href="/admin/item-list" class="btn btn-secondary" style="padding: 13px 20px;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
 
-        <button type="submit">Update Product</button>
-    </form>
-
-    <br>
-    <a href="/admin/item-list">Back to Product List</a>
-
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store Administrative Console.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

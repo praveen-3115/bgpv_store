@@ -1,18 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Payment</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Checkout | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .payment-container {
+            max-width: 520px;
+            margin: 50px auto 70px;
+            padding: 0 20px;
+        }
+
+        .payment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            box-shadow: var(--shadow-xl);
+            text-align: center;
+        }
+
+        .pay-amount-box {
+            background: #070b14;
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 25px 0;
+        }
+
+        .pay-amount-label {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .pay-amount-val {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #10b981;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
+            <nav>
+                <a href="/cart">← Cancel Payment</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2>Complete Your Payment</h2>
+    <main class="container payment-container">
+        <div class="payment-card">
+            <span class="hero-tag">Step 2 of 2</span>
+            <h1 class="h2" style="color: #ffffff; margin-top: 10px; margin-bottom: 6px;">💳 Secure Checkout</h1>
+            <p style="color: #94a3b8; font-size: 0.95rem;">Complete your transaction safely via Razorpay encrypted gateway.</p>
 
-    <p>Total Amount: ₹{{ amount }}</p>
+            <div class="pay-amount-box">
+                <div class="pay-amount-label">Total Payable Amount</div>
+                <div class="pay-amount-val">₹{{ "%.2f"|format(amount|float) if amount else "0.00" }}</div>
+                <div style="font-size: 0.82rem; color: #64748b; margin-top: 6px;">Order ID: {{ order_id }}</div>
+            </div>
 
-    <button id="rzp-button">Pay Now</button>
+            <button id="rzp-button" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
+                🔒 Pay Now with Razorpay
+            </button>
+
+            <div class="security-badge">
+                <span>🛡️</span> 256-Bit SSL Encrypted & Verified Transaction
+            </div>
+        </div>
+    </main>
 
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -20,13 +99,12 @@
     <script>
         var options = {
             "key": "{{ key_id }}",
-            "amount": "{{ amount * 100 }}",
+            "amount": "{{ (amount * 100)|int }}",
             "currency": "INR",
-            "name": "SmartCart",
+            "name": "Sassy Store",
             "description": "Order Payment",
             "order_id": "{{ order_id }}",
             "handler": function (response) {
-                // Build a small form and POST to server for verification
                 var form = document.createElement("form");
                 form.method = "POST";
                 form.action = "/verify-payment";
@@ -48,8 +126,8 @@
                 document.body.appendChild(form);
                 form.submit();
             },
-            "prefill": {
-                // optionally prefill user info
+            "theme": {
+                "color": "#6366f1"
             }
         };
 
@@ -60,7 +138,12 @@
         }
     </script>
 
-
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. All transactions processed securely.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

@@ -1,20 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Payment Successful</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .success-box {
+            max-width: 550px;
+            margin: 60px auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .check-badge {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #10b981;
+            color: white;
+            font-size: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
+            <nav>
+                <a href="/products">Shop</a>
+                <a href="/user/my-orders">My Orders</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2 style="color:green;">Payment Successful!</h2>
+    <main class="container">
+        <div class="success-box">
+            <div class="check-badge">✓</div>
+            <h1 class="h2" style="color: #ffffff; margin-bottom: 10px;">Payment Successful!</h1>
+            <p style="color: #94a3b8; font-size: 1rem; margin-bottom: 25px;">Your transaction has been securely processed.</p>
 
-    <p>Payment ID: {{ payment_id }}</p>
-    <p>Order ID: {{ order_id }}</p>
+            <div style="background: #080c14; border: 1px solid var(--border-color-light); border-radius: var(--radius); padding: 20px; margin-bottom: 30px; text-align: left;">
+                <p style="margin: 4px 0; color: #cbd5e1;"><strong>Payment ID:</strong> <span style="color: #38bdf8;">{{ payment_id }}</span></p>
+                <p style="margin: 4px 0; color: #cbd5e1;"><strong>Order ID:</strong> <span style="color: #38bdf8;">{{ order_id }}</span></p>
+            </div>
 
-    <a href="/user/products">Continue Shopping</a>
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="/user/order-success/{{ order_id }}" class="btn btn-primary" style="padding: 12px 24px;">
+                    View Order Receipt →
+                </a>
+                <a href="/products" class="btn btn-secondary" style="padding: 12px 24px;">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </main>
 
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

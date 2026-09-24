@@ -4,60 +4,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Delivery Address</title>
+    <title>Delivery Address | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .checkout-container {
+            max-width: 600px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+        }
+
+        .checkout-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 35px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .checkout-card form {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+            border: none;
+            max-width: 100%;
+        }
+
+        .form-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 540px) {
+            .form-row-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
+            <nav>
+                <a href="/cart">← Back to Cart</a>
+                <a href="/products">Shop</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2>Delivery Address</h2>
+    <main class="container checkout-container">
+        <div class="checkout-card">
+            <div class="form-header" style="text-align: left; margin-bottom: 25px;">
+                <span class="hero-tag" style="margin-bottom: 10px;">Step 1 of 2</span>
+                <h1 class="h2" style="color: #ffffff; margin-bottom: 6px;">📍 Delivery Address</h1>
+                <p style="color: #94a3b8; font-size: 0.95rem; margin: 0;">Please provide your accurate shipping destination for fast order delivery.</p>
+            </div>
 
-    <form action="/save_address" method="POST">
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-        <table>
+            <form action="/save_address" method="POST">
+                <div class="form-group">
+                    <label for="full_name">Full Recipient Name</label>
+                    <input type="text" id="full_name" name="full_name" placeholder="e.g. John Doe" required>
+                </div>
 
-            <tr>
-                <td><label>Full Name</label></td>
-                <td><input type="text" name="full_name" required></td>
-            </tr>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" required>
+                </div>
 
-            <tr>
-                <td><label>Phone Number</label></td>
-                <td><input type="tel" name="phone" required></td>
-            </tr>
+                <div class="form-group">
+                    <label for="address">Street Address / Flat / Landmark</label>
+                    <textarea id="address" name="address" rows="3" placeholder="Flat No., House No., Building Name, Street" required></textarea>
+                </div>
 
-            <tr>
-                <td><label>Address</label></td>
-                <td><textarea name="address" required></textarea></td>
-            </tr>
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                    </div>
 
-            <tr>
-                <td><label>City</label></td>
-                <td><input type="text" name="city" required></td>
-            </tr>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" name="state" placeholder="State" required>
+                    </div>
+                </div>
 
-            <tr>
-                <td><label>State</label></td>
-                <td><input type="text" name="state" required></td>
-            </tr>
+                <div class="form-group">
+                    <label for="pincode">Pincode</label>
+                    <input type="text" id="pincode" name="pincode" placeholder="6-digit Pincode" required>
+                </div>
 
-            <tr>
-                <td><label>Pincode</label></td>
-                <td><input type="text" name="pincode" required></td>
-            </tr>
+                <!-- Send selected product IDs to Flask -->
+                {% for product_id in selected_products %}
+                <input type="hidden" name="selected_products" value="{{ product_id }}">
+                {% endfor %}
 
-        </table>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 15px; padding: 14px; font-size: 1.05rem;">
+                    Continue to Payment →
+                </button>
+            </form>
+        </div>
+    </main>
 
-        <!-- Send selected product IDs to Flask -->
-        {% for product_id in selected_products %}
-        <input type="hidden" name="selected_products" value="{{ product_id }}">
-        {% endfor %}
-
-        <button type="submit">Continue to Payment</button>
-
-    </form>
-
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. Secure Checkout Protected.</p>
+        </div>
+    </footer>
 </body>
 
 </html>
