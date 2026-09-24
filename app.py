@@ -13,9 +13,6 @@ import traceback
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
 from dotenv import load_dotenv
-import requests
-import urllib.parse
-import threading
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
@@ -754,180 +751,6 @@ def user_logout():
     flash("Logged out successfully!", "success")
     return redirect('/user-login')
 
-# ---------------------------------------------------------
-# USER FORGOT PASSWORD & RESET
-# ---------------------------------------------------------
-@app.route('/forgot-password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'GET':
-        return render_template("user/forgot_password.html")
-
-    email = request.form.get('email', '').strip()
-
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT user_id, name FROM users WHERE email=%s", (email,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if not user:
-        flash("No account registered with that email address.", "danger")
-        return redirect('/forgot-password')
-
-    otp = random.randint(100000, 999999)
-    session['reset_email'] = email
-    session['reset_otp'] = str(otp)
-
-    try:
-        message = Message(
-            subject="Password Reset OTP - Sassy Store",
-            sender=config.MAIL_USERNAME,
-            recipients=[email]
-        )
-        message.body = (
-            f"Hello {user['name']},\n\n"
-            f"Your OTP for resetting your Sassy Store account password is: {otp}\n\n"
-            f"If you did not request this password reset, please ignore this email.\n\n"
-            f"Best regards,\nSassy Store Support Team"
-        )
-        mail.send(message)
-        flash("Password reset OTP has been sent to your email!", "success")
-        return redirect('/reset-password')
-    except Exception as e:
-        app.logger.error("Failed to send reset email: %s\n%s", str(e), traceback.format_exc())
-        flash("Failed to send OTP email. Please verify mail configuration or try again.", "danger")
-        return redirect('/forgot-password')
-
-
-@app.route('/reset-password', methods=['GET', 'POST'])
-def reset_password():
-    if 'reset_email' not in session or 'reset_otp' not in session:
-        flash("Please request a password reset first.", "warning")
-        return redirect('/forgot-password')
-
-    if request.method == 'GET':
-        return render_template("user/reset_password.html", email=session.get('reset_email'))
-
-    entered_otp = request.form.get('otp', '').strip()
-    new_password = request.form.get('new_password', '')
-    confirm_password = request.form.get('confirm_password', '')
-
-    if str(session.get('reset_otp')) != str(entered_otp):
-        flash("Invalid OTP. Please check your email and try again.", "danger")
-        return redirect('/reset-password')
-
-    if new_password != confirm_password:
-        flash("Passwords do not match. Please re-enter.", "danger")
-        return redirect('/reset-password')
-
-    if len(new_password) < 6:
-        flash("Password must be at least 6 characters long.", "danger")
-        return redirect('/reset-password')
-
-    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    email = session.get('reset_email')
-
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("UPDATE users SET password=%s WHERE email=%s", (hashed_password, email))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    session.pop('reset_email', None)
-    session.pop('reset_otp', None)
-
-    flash("Password reset successfully! Please sign in with your new password.", "success")
-    return redirect('/user-login')
-
-# ---------------------------------------------------------
-# ADMIN FORGOT PASSWORD & RESET
-# ---------------------------------------------------------
-@app.route('/admin/forgot-password', methods=['GET', 'POST'])
-def admin_forgot_password():
-    if request.method == 'GET':
-        return render_template("admin/admin_forgot_password.html")
-
-    email = request.form.get('email', '').strip()
-
-    conn = get_db()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT admin_id, name FROM admin WHERE email=%s", (email,))
-    admin = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if not admin:
-        flash("No admin account registered with that email address.", "danger")
-        return redirect('/admin/forgot-password')
-
-    otp = random.randint(100000, 999999)
-    session['admin_reset_email'] = email
-    session['admin_reset_otp'] = str(otp)
-
-    try:
-        message = Message(
-            subject="Admin Password Reset OTP - Sassy Store",
-            sender=config.MAIL_USERNAME,
-            recipients=[email]
-        )
-        message.body = (
-            f"Hello {admin['name']},\n\n"
-            f"Your OTP for resetting your Sassy Store Admin password is: {otp}\n\n"
-            f"If you did not request this, please secure your account immediately.\n\n"
-            f"Best regards,\nSassy Store Security Team"
-        )
-        mail.send(message)
-        flash("Admin password reset OTP sent to your email!", "success")
-        return redirect('/admin/reset-password')
-    except Exception as e:
-        app.logger.error("Failed to send admin reset email: %s\n%s", str(e), traceback.format_exc())
-        flash("Failed to send OTP email. Please verify mail configuration or try again.", "danger")
-        return redirect('/admin/forgot-password')
-
-
-@app.route('/admin/reset-password', methods=['GET', 'POST'])
-def admin_reset_password():
-    if 'admin_reset_email' not in session or 'admin_reset_otp' not in session:
-        flash("Please request an admin password reset first.", "warning")
-        return redirect('/admin/forgot-password')
-
-    if request.method == 'GET':
-        return render_template("admin/admin_reset_password.html", email=session.get('admin_reset_email'))
-
-    entered_otp = request.form.get('otp', '').strip()
-    new_password = request.form.get('new_password', '')
-    confirm_password = request.form.get('confirm_password', '')
-
-    if str(session.get('admin_reset_otp')) != str(entered_otp):
-        flash("Invalid OTP. Try again.", "danger")
-        return redirect('/admin/reset-password')
-
-    if new_password != confirm_password:
-        flash("Passwords do not match.", "danger")
-        return redirect('/admin/reset-password')
-
-    if len(new_password) < 6:
-        flash("Password must be at least 6 characters long.", "danger")
-        return redirect('/admin/reset-password')
-
-    hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    email = session.get('admin_reset_email')
-
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("UPDATE admin SET password=%s WHERE email=%s", (hashed_password, email))
-    conn.commit()
-    cursor.close()
-    conn.close()
-
-    session.pop('admin_reset_email', None)
-    session.pop('admin_reset_otp', None)
-
-    flash("Admin password reset successfully! Please log in.", "success")
-    return redirect('/admin-login')
-
 #route-5 admin dashoard
 @app.route('/user-dashboard')
 def user_dashboard():
@@ -1240,90 +1063,15 @@ def checkout_address():
         selected_products=selected_products
     )
 
-def send_whatsapp_order_notification(phone_number, order_id, amount, customer_name, items_summary, address):
-    """
-    Sends an automated order confirmation message to the customer's mobile number via WhatsApp.
-    Uses Twilio WhatsApp API (whitelisted on PythonAnywhere free tier).
-    Fails safely if credentials are not configured or connection fails.
-    """
-    if not phone_number:
-        app.logger.warning("No phone number provided for WhatsApp order notification #%s", order_id)
-        return False
-
-    clean_digits = re.sub(r'[^0-9]', '', str(phone_number))
-    if len(clean_digits) == 10:
-        clean_phone = "+91" + clean_digits
-    elif clean_digits.startswith("0") and len(clean_digits) == 11:
-        clean_phone = "+91" + clean_digits[1:]
-    elif clean_digits.startswith("91") and len(clean_digits) == 12:
-        clean_phone = "+" + clean_digits
-    elif not clean_digits.startswith("+"):
-        clean_phone = "+" + clean_digits
-    else:
-        clean_phone = str(phone_number).strip()
-
-    account_sid = getattr(config, 'TWILIO_ACCOUNT_SID', None) or os.getenv('TWILIO_ACCOUNT_SID')
-    auth_token = getattr(config, 'TWILIO_AUTH_TOKEN', None) or os.getenv('TWILIO_AUTH_TOKEN')
-    from_whatsapp = getattr(config, 'TWILIO_WHATSAPP_NUMBER', None) or os.getenv('TWILIO_WHATSAPP_NUMBER', 'whatsapp:+14155238886')
-
-    if from_whatsapp and not from_whatsapp.startswith('whatsapp:'):
-        from_whatsapp = f"whatsapp:{from_whatsapp}"
-
-    message_body = (
-        f"✨ *BharVeen Store - Order Confirmed!* ✨\n\n"
-        f"Hello *{customer_name}*! 🎉\n"
-        f"Your order *#ORD-{order_id}* has been placed successfully.\n\n"
-        f"💰 *Total Amount:* ₹{float(amount):.2f}\n"
-        f"📦 *Items:* {items_summary}\n\n"
-        f"Thank you for shopping with *BharVeen Store*! We are packing your order for fast dispatch."
-    )
-
-    if account_sid and auth_token:
-        try:
-            url = f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json"
-            res = requests.post(
-                url,
-                auth=(account_sid, auth_token),
-                data={
-                    "From": from_whatsapp,
-                    "To": f"whatsapp:{clean_phone}",
-                    "Body": message_body
-                },
-                timeout=10
-            )
-            app.logger.info("WhatsApp order confirmation status for order #%s: %s", order_id, res.status_code)
-            return res.status_code in (200, 201)
-        except Exception as e:
-            app.logger.error("Failed to send WhatsApp notification for order #%s: %s", order_id, str(e))
-            return False
-    else:
-        app.logger.info("Twilio WhatsApp credentials not configured. WhatsApp message prepared for %s (Order #%s)", clean_phone, order_id)
-        return False
-
-
-@app.route('/save_address', methods=['POST'])
+@app.route('/save_address',methods=['POST'])
 def save_address():
     if 'user_id' not in session:
         flash("Please Login")
         return redirect('/user-login')
-
-    full_name = request.form.get('full_name', '').strip()
-    phone = request.form.get('phone', '').strip()
-    address_line = request.form.get('address', '').strip()
-    city = request.form.get('city', '').strip()
-    state = request.form.get('state', '').strip()
-    pincode = request.form.get('pincode', '').strip()
+    address=request.form.get('address')
     selected_products = request.form.getlist('selected_products')
-
-    if full_name or phone or city:
-        formatted_address = f"{full_name}\n{address_line}\n{city}, {state} - {pincode}\nPhone: {phone}"
-    else:
-        formatted_address = address_line
-
-    session['delivery_address'] = formatted_address
-    session['delivery_phone'] = phone
-    session['delivery_name'] = full_name
-    session['selected_products'] = selected_products
+    session['delivery_address']=address
+    session['selected_products']=selected_products
     return redirect('/user/pay')
 
 @app.route('/user/pay', methods=['POST','GET'])
@@ -1544,21 +1292,6 @@ def verify_payment():
         # Save everything
         conn.commit()
 
-        # Extract phone and customer name for WhatsApp notification
-        phone = session.get('delivery_phone', '')
-        customer_name = session.get('delivery_name') or session.get('user_name', 'Valued Customer')
-        items_summary = ", ".join([f"{it['name']} (x{it['quantity']})" for it in selected_items])
-
-        # Send WhatsApp confirmation asynchronously
-        try:
-            threading.Thread(
-                target=send_whatsapp_order_notification,
-                args=(phone, order_db_id, total_amount, customer_name, items_summary, address),
-                daemon=True
-            ).start()
-        except Exception as wa_err:
-            app.logger.warning("Could not dispatch background WhatsApp notification: %s", str(wa_err))
-
         # Clear temporary session data
         session.pop('selected_products', None)
         session.pop('razorpay_order_id', None)
@@ -1602,12 +1335,7 @@ def order_success(order_db_id):
     cursor.execute("SELECT * FROM orders WHERE order_id=%s AND user_id=%s", (order_db_id, session['user_id']))
     order = cursor.fetchone()
 
-    cursor.execute("""
-        SELECT order_items.*, products.image, products.category
-        FROM order_items
-        LEFT JOIN products ON order_items.product_id = products.product_id
-        WHERE order_items.order_id=%s
-    """, (order_db_id,))
+    cursor.execute("SELECT * FROM order_items WHERE order_id=%s", (order_db_id,))
     items = cursor.fetchall()
 
     cursor.close()
@@ -1616,39 +1344,7 @@ def order_success(order_db_id):
     if not order:
         flash("Order not found.", "danger")
         return redirect('/products')
-
-    order_dict = dict(order) if order else {}
-    delivery_addr = order_dict.get('delivery_address') or ''
-    phone_match = re.search(r'Phone:\s*([0-9+]+)', delivery_addr)
-    phone_raw = phone_match.group(1) if phone_match else ''
-    clean_digits = re.sub(r'[^0-9]', '', phone_raw)
-    if len(clean_digits) == 10:
-        clean_phone = "91" + clean_digits
-    else:
-        clean_phone = clean_digits
-
-    # Pre-filled WhatsApp receipt text
-    items_text = ", ".join([f"{it['product_name']} (x{it['quantity']})" for it in items])
-    wa_msg = (
-        f"✨ *BharVeen Store - Order Confirmation* ✨\n\n"
-        f"Hello! My order *#ORD-{order['order_id']}* has been placed successfully. 🎉\n\n"
-        f"💰 *Total Paid:* ₹{float(order['amount']):.2f}\n"
-        f"📦 *Items:* {items_text}\n\n"
-        f"Please share shipping & tracking updates here. Thank you!"
-    )
-    encoded_text = urllib.parse.quote(wa_msg)
-    if clean_phone:
-        whatsapp_link = f"https://api.whatsapp.com/send?phone={clean_phone}&text={encoded_text}"
-    else:
-        whatsapp_link = f"https://api.whatsapp.com/send?text={encoded_text}"
-
-    return render_template(
-        "/user/order_success.html",
-        order=order,
-        items=items,
-        whatsapp_link=whatsapp_link,
-        customer_phone=phone_raw
-    )
+    return render_template("/user/order_success.html",order=order,items=items)
 @app.route('/user/my-orders')
 def my_orders():
     if 'user_id' not in session:
