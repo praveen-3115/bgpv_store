@@ -193,7 +193,7 @@ def verify_otp_post():
         return redirect('/verify-otp')
 
     # Hash password using bcrypt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     # Insert admin into database
     conn = get_db()
@@ -239,8 +239,10 @@ def admin_login():
         flash("Email not found! Please register first.", "danger")
         return redirect('/admin-login')
 
-    # Step 2: Compare entered password with hashed password
-    stored_hashed_password = admin['password'].encode('utf-8')
+    # Step 2: Compare entered password with hashed password (handle both str and bytes in SQLite)
+    stored_hashed_password = admin['password']
+    if isinstance(stored_hashed_password, str):
+        stored_hashed_password = stored_hashed_password.encode('utf-8')
 
     if not bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password):
         flash("Incorrect password! Try again.", "danger")
@@ -562,7 +564,7 @@ def admin_profile_update():
 
     # 3️⃣ Update password only if entered
     if new_password:
-        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+        hashed_password = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     else:
         hashed_password = admin['password']  # keep old password
 
@@ -673,12 +675,12 @@ def verify_user_otp_post():
     # Compare OTP
     if str(session.get('otp')) != str(user_otp):
         flash("Invalid OTP. Try again!", "danger")
-        return redirect('/verify-otp')
+        return redirect('/verify-user-otp')
 
-    # Hash password using bcrypt
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    # Hash password using bcrypt and decode to utf-8 string for clean SQLite storage
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
-    # Insert admin into database
+    # Insert user into database
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute(
@@ -694,8 +696,8 @@ def verify_user_otp_post():
     session.pop('signup_name', None)
     session.pop('signup_email', None)
 
-    flash("Admin Registered Successfully!", "success")
-    return redirect('/user_register')
+    flash("User Registered Successfully! Please login.", "success")
+    return redirect('/user-login')
 #route-4-admin-login
 @app.route('/user-login', methods=['GET', 'POST'])
 def user_login():
@@ -722,8 +724,10 @@ def user_login():
         flash("Email not found! Please register first.", "danger")
         return redirect('/user-login')
 
-    # Step 2: Compare entered password with hashed password
-    stored_hashed_password = user['password'].encode('utf-8')
+    # Step 2: Compare entered password with hashed password (handle both str and bytes in SQLite)
+    stored_hashed_password = user['password']
+    if isinstance(stored_hashed_password, str):
+        stored_hashed_password = stored_hashed_password.encode('utf-8')
 
     if not bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password):
         flash("Incorrect password! Try again.", "danger")
