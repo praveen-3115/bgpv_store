@@ -4,61 +4,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sassy_Store</title>
+    <title>Sassy Store | Premium Fashion & Lifestyle</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
 
 <body>
-    <div class="container">
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
 
-        <h1>Welcome to Manaa Store</h1>
+            <nav>
+                <a href="/products">Shop Catalog</a>
+                <a href="/cart">🛒 Cart</a>
+                {% if session.get('user_id') %}
+                <a href="/user-dashboard">Dashboard ({{ session.get('user_name') }})</a>
+                <a href="/user-logout" class="nav-btn btn-danger">Logout</a>
+                {% elif session.get('admin_id') %}
+                <a href="/admin-dashboard">Admin ({{ session.get('admin_name') }})</a>
+                <a href="/admin-logout" class="nav-btn btn-danger">Logout</a>
+                {% else %}
+                <a href="{{ url_for('user_login') }}" class="nav-btn nav-btn-outline">Sign In</a>
+                <a href="{{ url_for('user_register') }}" class="nav-btn nav-btn-primary">Register</a>
+                <a href="{{ url_for('admin_login') }}" style="color: var(--text-muted); font-size: 0.85rem;">Admin</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-        <nav>
-            <a href="{{url_for('admin_login')}}">Admin Login</a>
-
-            <a href="{{url_for('admin_register')}}">Admin Register</a>
-
-            <a href="{{url_for('user_login')}}">User Login</a>
-            <a href="{{url_for('user_register')}}">User Register</a>
-        </nav>
+    <main class="container">
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
         {% for category, message in messages %}
-        <p style="color:red;">{{ message }}</p>
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
         {% endfor %}
+        {% endif %}
         {% endwith %}
-        <!-- Search Form -->
-        <div class="products-section">
 
-            <div class="products-container">
+        <!-- Hero Section -->
+        <section class="hero-banner">
+            <span class="hero-tag">🌟 New Collection 2026</span>
+            <h1>Discover What Defines Your Vibe</h1>
+            <p>Step into the curated world of premium accessories, trendsetting gadgets, and modern everyday essentials
+                crafted for you.</p>
+            <div class="hero-actions">
+                <a href="/products" class="btn"
+                    style="background: var(--accent); padding: 14px 28px; font-size: 1.05rem;">Explore All Products
+                    →</a>
+                {% if not session.get('user_id') and not session.get('admin_id') %}
+                <a href="/user_register" class="btn btn-secondary" style="padding: 14px 28px; font-size: 1.05rem;">Join
+                    Sassy Club</a>
+                {% endif %}
+            </div>
+        </section>
 
-                {% for product in products %}
-
-                <div class="product-card">
-
-                    <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}"
-                        alt="{{ product.name }}">
-
-                    <h3>{{ product.name }}</h3>
-
-                    <p>{{ product.category }}</p>
-
-                    <h4>₹{{ product.price }}</h4>
-
-                    <a href="/admin/view-item/{{ product.product_id }}">
-                        View Product
-                    </a>
-
+        <!-- Products Section -->
+        <section class="products-section" style="padding: 0;">
+            <div class="section-header">
+                <div>
+                    <h2>Featured Products</h2>
+                    <p>Hand-picked selections updated weekly</p>
                 </div>
-
-                {% endfor %}
-
+                <a href="/products" style="font-weight: 700; color: var(--primary);">View Entire Catalog &rarr;</a>
             </div>
 
-        </div>
-    </div>
+            <div class="products-container">
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image-wrap">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' + product.image) }}"
+                            alt="{{ product.name }}" loading="lazy">
+                    </div>
 
+                    <div class="product-card-body">
+                        <span class="product-category">{{ product.category }}</span>
+                        <h3>{{ product.name }}</h3>
+
+                        <div class="product-price-row">
+                            <span class="price-tag">₹{{ "%.2f"|format(product.price|float) if product.price else "0.00"
+                                }}</span>
+                        </div>
+
+                        <a href="/admin/view-item/{{ product.product_id }}">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="brand-logo" style="justify-content: center;">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </div>
+            <p>Your one-stop destination for quality lifestyle products and secure shopping.</p>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/products">All Products</a>
+                <a href="/cart">My Cart</a>
+                <a href="/user-login">User Portal</a>
+                <a href="/admin-login">Admin Portal</a>
+            </div>
+            <p style="font-size: 0.82rem; margin-top: 10px;">&copy; 2026 Sassy Store. All rights reserved. Powered by
+                Flask & SQLite.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

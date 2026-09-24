@@ -1,42 +1,82 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <title>Admin Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
+    <style>
+        .auth-wrapper {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+    </style>
 </head>
 
 <body>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">🛡️</span>
+                <span>Sassy Store Admin</span>
+            </a>
+            <nav>
+                <a href="/">← Return to Store</a>
+            </nav>
+        </div>
+    </header>
 
-    <h2>Admin Login</h2>
+    <div class="auth-wrapper">
+        <form method="POST" action="/admin-login">
+            <div class="form-header">
+                <div class="brand-badge"
+                    style="margin: 0 auto 15px auto; background: linear-gradient(135deg, #0f172a, #334155);">🔐</div>
+                <h2>Staff Sign In</h2>
+                <p>Authorized personnel only. Access store management controls.</p>
+            </div>
 
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-    <form method="POST" action="/admin-login">
-        <table>
-            <tr>
-                <td><label>Email:</label><br></td>
-                <td><input type="email" name="email" required><br><br></td>
-            </tr>
-            <tr>
-                <td><label>Password:</label><br></td>
-                <td><input type="password" name="password" required><br><br></td>
-            </tr>
-        </table>
+            <div class="form-group">
+                <label for="email">Admin Email</label>
+                <input type="email" name="email" id="email" placeholder="admin@sassystore.com" required
+                    autocomplete="email">
+            </div>
 
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="••••••••" required
+                    autocomplete="current-password">
+            </div>
 
+            <button type="submit" style="background: var(--secondary);">Enter Dashboard</button>
 
+            <div class="form-footer">
+                Need admin access? <a href="/admin_register">Register administrator</a>
+            </div>
+        </form>
+    </div>
 
-
-        <button type="submit">Login</button>
-
-    </form>
-
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store Administrative Console.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

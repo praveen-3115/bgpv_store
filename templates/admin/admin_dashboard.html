@@ -1,28 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Sassy Store</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:green;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+    <!-- Admin Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/admin-dashboard" class="brand-logo">
+                <span class="brand-badge" style="background: linear-gradient(135deg, #0f172a, #334155);">🛡️</span>
+                <span>Admin Console</span>
+            </a>
 
-    <h2>Welcome, {{ admin_name }}</h2>
-    <a href="/admin/add-item">Add Product</a>
-    <a href="/admin/item-list">View All Products</a>
-    <a href="/admin/profile">My Profile</a>
+            <nav>
+                <a href="/" target="_blank">🌐 View Store</a>
+                <a href="/admin/item-list">Inventory</a>
+                <a href="/admin/add-item" class="nav-btn-primary" style="padding: 7px 14px;">+ Add Product</a>
+                <a href="/admin/profile">Profile</a>
+                <a href="/admin-logout" class="nav-btn btn-danger" style="padding: 7px 14px;">Logout</a>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container" style="margin-top: 40px;">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-    <!-- Logout Button -->
-    <a href="/admin-logout">Logout</a>
+        <!-- Welcome Banner -->
+        <div class="dashboard-header" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
+            <h2>Administrator Portal</h2>
+            <p style="color: #94a3b8; margin-bottom: 0;">Welcome, <strong>{{ admin_name }}</strong>. Manage catalog
+                items, media assets, and store configuration.</p>
+        </div>
 
+        <!-- Admin Control Cards -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon" style="background: #ecfdf5; color: #10b981;">➕</div>
+                <h3>Add New Product</h3>
+                <p>Upload new item imagery, set pricing, assign categories, and publish to catalog.</p>
+                <a href="/admin/add-item" style="background: #10b981;">Add Product &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon">📋</div>
+                <h3>Product Inventory</h3>
+                <p>Search, filter, update product descriptions, prices, or remove discontinued items.</p>
+                <a href="/admin/item-list">Manage Catalog &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon" style="background: #fdf2f8; color: #db2777;">👤</div>
+                <h3>Administrator Profile</h3>
+                <p>Update your email address, profile avatar, and administrative credentials.</p>
+                <a href="/admin/profile" style="background: #db2777;">Account Settings &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon" style="background: #f1f5f9; color: #475569;">🌐</div>
+                <h3>Public Storefront</h3>
+                <p>Preview the live storefront to see changes in real-time as your customers do.</p>
+                <a href="/" target="_blank" class="btn-secondary">Open Customer Store &rarr;</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store Administrative Console. All operations logged.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

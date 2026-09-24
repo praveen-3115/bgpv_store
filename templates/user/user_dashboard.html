@@ -4,23 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sassy store</title>
+    <title>User Dashboard | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:green;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
 
-    <h1>Welcome, {{user_name}}</h1>
-    <a href="/products">start Shopping</a>
-    <a href="/cart">My Cart</a>
-    <a href="/user-logout">Logout</a>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/products">Products</a>
+                <a href="/cart">🛒 Cart</a>
+                <a href="/user/my-orders">📦 Orders</a>
+                <a href="/user-logout" class="nav-btn btn-danger" style="padding: 7px 14px;">Logout</a>
+            </nav>
+        </div>
+    </header>
 
+    <main class="container" style="margin-top: 40px;">
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- Welcome Banner -->
+        <div class="dashboard-header">
+            <h2>Welcome back, {{ user_name }} 👋</h2>
+            <p style="color: #cbd5e1; margin-bottom: 0;">Manage your orders, explore new arrivals, and keep track of
+                your shopping bag.</p>
+        </div>
+
+        <!-- Dashboard Action Grid -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon">🛍️</div>
+                <h3>Shop Catalog</h3>
+                <p>Browse our curated collection of accessories, gadgets, and lifestyle items.</p>
+                <a href="/products">Start Shopping &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon">🛒</div>
+                <h3>Shopping Cart</h3>
+                <p>Review items in your cart, adjust quantities, and proceed to secure checkout.</p>
+                <a href="/cart">View Cart &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon">📦</div>
+                <h3>Order History</h3>
+                <p>Track your past purchases, verify delivery status, and download PDF invoices.</p>
+                <a href="/user/my-orders">Track Orders &rarr;</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="dashboard-card-icon">🔒</div>
+                <h3>Account Session</h3>
+                <p>Finished shopping for today? Log out safely to protect your account information.</p>
+                <a href="/user-logout" class="btn-danger" style="color: white;">Logout Safely &rarr;</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>

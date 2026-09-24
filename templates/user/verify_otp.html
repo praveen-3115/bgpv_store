@@ -4,30 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sassy store</title>
+    <title>Verify OTP | Sassy Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .auth-wrapper {
+            min-height: calc(100vh - 120px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+    </style>
 </head>
 
 <body>
-    <h2>Verify OTP</h2>
+    <!-- Top Header -->
+    <header>
+        <div class="nav-container">
+            <a href="/" class="brand-logo">
+                <span class="brand-badge">✨</span>
+                <span>Sassy Store</span>
+            </a>
+            <nav>
+                <a href="/user_register">← Back to Register</a>
+            </nav>
+        </div>
+    </header>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% for category, message in messages %}
-    <p style="color:red;">{{ message }}</p>
-    {% endfor %}
-    {% endwith %}
-    <p>User Registration</p>
-    <form method="POST" action="/verify-user-otp">
+    <div class="auth-wrapper">
+        <form method="POST" action="/verify-user-otp">
+            <div class="form-header">
+                <div class="brand-badge" style="margin: 0 auto 15px auto;">🔑</div>
+                <h2>Verify Email OTP</h2>
+                <p>We've sent a 6-digit verification code to your email address.</p>
+            </div>
 
-        <label>Enter OTP:</label><br>
-        <input type="text" name="otp" required><br><br>
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-        <label>Create Password:</label><br>
-        <input type="password" name="password" required><br><br>
+            <div class="form-group">
+                <label for="otp">Enter 6-Digit OTP</label>
+                <input type="text" name="otp" id="otp" placeholder="123456" required maxlength="6"
+                    style="letter-spacing: 4px; font-size: 1.25rem; text-align: center;">
+            </div>
 
-        <button type="submit">Verify & Register</button>
-    </form>
+            <div class="form-group">
+                <label for="password">Create Secure Password</label>
+                <input type="password" name="password" id="password" placeholder="At least 6 characters" required
+                    minlength="6">
+            </div>
 
+            <button type="submit">Complete Registration</button>
+
+            <div class="form-footer">
+                Didn't get the code? <a href="/user_register">Resend OTP</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Sassy Store. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 
 </html>
