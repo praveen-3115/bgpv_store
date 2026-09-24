@@ -1,8 +1,9 @@
 from flask import Flask,render_template,request,redirect,session,flash
 from flask_mail import Mail,Message
 import os
+import re
+import sqlite3
 from werkzeug.utils import secure_filename
-import mysql.connector
 import config
 import bcrypt
 import random
@@ -12,11 +13,9 @@ import traceback
 from flask import make_response, render_template
 from utils.pdf_generator import generate_pdf
 from dotenv import load_dotenv
-import os
 
-load_dotenv()
-
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 print("RUNNING THIS APP:", __file__)
 app=Flask(__name__)
@@ -29,25 +28,89 @@ app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
 app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
 mail=Mail(app)
 
-#sql_database connection
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads', 'product_images')
+ADMIN_UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads', 'product_images', 'admin_profiles')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(ADMIN_UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['ADMIN_UPLOAD_FOLDER'] = ADMIN_UPLOAD_FOLDER
+
+# SQLite Cursor & Connection Wrappers for MySQL compatibility
+class SQLiteCursorWrapper:
+    def __init__(self, cursor):
+        self._cursor = cursor
+
+    def _convert_query(self, query):
+        if not isinstance(query, str):
+            return query
+        # Seamlessly convert MySQL %s placeholders to SQLite ? placeholders
+        return re.sub(r'%s', '?', query)
+
+    def execute(self, query, params=None):
+        converted = self._convert_query(query)
+        if params is None:
+            return self._cursor.execute(converted)
+        if not isinstance(params, (tuple, list)):
+            params = (params,)
+        return self._cursor.execute(converted, params)
+
+    def executemany(self, query, params_seq):
+        converted = self._convert_query(query)
+        return self._cursor.executemany(converted, params_seq)
+
+    def fetchone(self):
+        return self._cursor.fetchone()
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+    def close(self):
+        try:
+            return self._cursor.close()
+        except Exception:
+            pass
+
+    @property
+    def lastrowid(self):
+        return self._cursor.lastrowid
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+    def __iter__(self):
+        return iter(self._cursor)
+
+class SQLiteConnectionWrapper:
+    def __init__(self, raw_conn):
+        self._conn = raw_conn
+
+    def cursor(self, dictionary=False):
+        # sqlite3.Row enables dict-like row access (e.g. row['col'] and row.col)
+        return SQLiteCursorWrapper(self._conn.cursor())
+
+    def commit(self):
+        return self._conn.commit()
+
+    def rollback(self):
+        return self._conn.rollback()
+
+    def close(self):
+        try:
+            return self._conn.close()
+        except Exception:
+            pass
+
+# SQLite database connection
 def get_db():
+    if not os.path.exists(config.DB_PATH):
+        from init_db import init_database
+        init_database(config.DB_PATH)
 
-    print("DB HOST:", config.DB_HOST)
-    print("DB USER:", config.DB_USER)
-    print("DB NAME:", config.DB_NAME)
-    print("DB PORT:", config.DB_PORT)
-
-    conn = mysql.connector.connect(
-        host=config.DB_HOST,
-        user=config.DB_USER,
-        password=config.DB_PASSWORD,
-        database=config.DB_NAME,
-        port=config.DB_PORT
-    )
-
-    print("FLASK DATABASE CONNECTED!", config.DB_NAME)
-
-    return conn
+    conn = sqlite3.connect(config.DB_PATH, timeout=15, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON;")
+    return SQLiteConnectionWrapper(conn)
 #Route-1 home page
 @app.route('/')
 def home():
@@ -206,8 +269,7 @@ def admin_logout():
 
      flash("Logged out successfully.", "success")
      return redirect('/admin-login')
-UPLOAD_FOLDER = 'static/uploads/product_images'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 #route 7 add-item
 @app.route('/admin/add-item', methods=['GET'])
 def add_item_page():
@@ -474,8 +536,6 @@ def admin_profile():
 
     return render_template("admin/admin_profile.html", admin=admin)
 
-ADMIN_UPLOAD_FOLDER = 'static/uploads/product_images/admin_profiles'
-app.config['ADMIN_UPLOAD_FOLDER'] = ADMIN_UPLOAD_FOLDER
 @app.route('/admin/profile', methods=['POST'])
 def admin_profile_update():
 
