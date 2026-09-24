@@ -1509,7 +1509,12 @@ def order_success(order_db_id):
     cursor.execute("SELECT * FROM orders WHERE order_id=%s AND user_id=%s", (order_db_id, session['user_id']))
     order = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM order_items WHERE order_id=%s", (order_db_id,))
+    cursor.execute("""
+        SELECT order_items.*, products.image, products.category
+        FROM order_items
+        LEFT JOIN products ON order_items.product_id = products.product_id
+        WHERE order_items.order_id=%s
+    """, (order_db_id,))
     items = cursor.fetchall()
 
     cursor.close()
